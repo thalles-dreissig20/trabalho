@@ -2,11 +2,6 @@
 
 Este sistema, desenvolvido em Python com base no paradigma de programação orientada a objetos, tem como objetivo organizar e controlar os dados de pagamento de tributos (taxas, contribuições, impostos) que devem ser deduzidos durante o processo de pagamento de despesas de um órgão público, permitindo o controle **off-line** antes do lançamento no sistema da Receita Federal (SIAFI).
 
-## Objetivo
-
-Simular um sistema que gerencie notas fiscais e faturas com retenções de tributos relacionadas às fases de pagamento de uma despesa pública (Empenho, Liquidação e Pagamento). O sistema permite o cadastro, controle e homologação de registros, respeitando os perfis de usuários.
-
----
 
 ## Estrutura do Sistema
 
@@ -19,24 +14,6 @@ O sistema segue uma abordagem **orientada a objetos**, com as seguintes entidade
 - `Retencao`: valor que será deduzido de tributos
 - `Pagamento`: consolida todas as informações e processa o pagamento
 
----
-
-## Perfis de Usuário
-
-- **Operador**: pode cadastrar, alterar e excluir registros
-- **Homologador**: pode fazer tudo que o operador faz, além de **aprovar e homologar** os pagamentos
-
----
-
-## Funcionalidades
-
-- Cadastro de documentos fiscais (NF ou Fatura)
-- Registro de pagamentos com retenções aplicadas
-- Aprovação e homologação de pagamentos
-- Geração de relatórios mensais ou por empresa
-- Controle de dedução de tributos antes do envio ao SIAFI
-
----
 
 ## Conceitos de Orientação a Objetos Aplicados
 
