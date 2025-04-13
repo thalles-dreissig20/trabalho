@@ -24,7 +24,6 @@ O sistema segue uma abordagem **orientada a objetos**, com as seguintes entidade
   - `Empresa` agrega vários `DocumentoFiscal` que podem existir independentemente
 - **Composição**: 
   - `Pagamento` compõe uma `Retencao`, que só existe junto com o pagamento
-- **Herança** *(opcional)*: pode ser aplicada para diferenciar `NotaFiscal` e `Fatura` a partir de `DocumentoFiscal`
 
 <p align="center">
   <img src="assets/uml.png" alt="uml do sistema" />
