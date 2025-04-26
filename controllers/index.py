@@ -14,13 +14,14 @@ class IndexController:
         )
 
         self.__company_controller = CompanyController(self, self.__entity)
-        self.__invoices_controller = InvoiceController(self)
+        self.__invoices_controller = InvoiceController(self, self.__entity)
         self.__view = IndexView()
 
     def initialize(self):
         options_list = {
-            1: self.companies,
-            2: self.invoices,
+            1: self.entity,
+            2: self.companies,
+            3: self.invoices,
             0: self.exit
         }
         while True:
@@ -34,18 +35,14 @@ class IndexController:
 
     
 
+    def entity(self):
+        print(self.__entity)
+
     def companies(self):
         return self.__company_controller.open_screen()
     
     def invoices(self):
         return self.__invoices_controller.open_screen()
-
-    def get_company_controller(self):   
-        return self.__company_controller.get_companies()
-    
-    def get_entity(self):
-        return self.__entity
     
     def exit(self):
-        print(self.__entity.companies)
         exit(0)

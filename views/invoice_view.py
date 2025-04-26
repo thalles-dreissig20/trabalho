@@ -4,7 +4,8 @@ class InvoiceView:
         print("1. Cadastrar nota")
         print("2. Listar notas")
         print("3. Alterar nota")
-        print("4. Excluir nota")
+        print("4. Aprovar nota")
+        print("5. Excluir nota")
         print("0 - Retornar")
         opcao = int(input("Escolha a opcao:"))
         return opcao

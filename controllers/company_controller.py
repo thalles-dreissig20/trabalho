@@ -28,29 +28,24 @@ class CompanyController:
 
     # Atualizar uma compania;
     def update_company(self):
-        index = self.__company_view.select_company_index(self.__index_controller.get_entity().companies)
+        index = self.__company_view.select_company_index(self.__entity.companies)
         if index is not None:
             cnpj, social_reason = self.__company_view.get_company_data()
-            self.__index_controller.get_entity().companies[index].cnpj = cnpj
-            self.__index_controller.get_entity().companies[index].social_reason = social_reason
+            self.__entity.companies[index].cnpj = cnpj
+            self.__entity.companies[index].social_reason = social_reason
             self.__company_view.show_message("Empresa atualizada.")
 
     # Listar companias;
     def list_companies(self):
-        self.__company_view.show_companies(self.__index_controller.get_entity().companies)
+        self.__company_view.show_companies(self.__entity.companies)
 
     # Deletar uma compania;
     def delete_company(self):
-        index = self.__company_view.select_company_index(self.__index_controller.get_entity().companies)
+        index = self.__company_view.select_company_index(self.__entity.companies)
         if index is not None:
-            company = self.__index_controller.get_entity().companies.pop(index)
+            company = self.__entity.companies.pop(index)
             self.__company_view.show_message(f"{company.social_reason} removida com sucesso.")
-
-    def get_companies(self):
-        return self.__index_controller.get_entity().companies
 
     # Voltar;
     def back(self):
-        print(self.__entity.list_companies())
-        print(self.__entity)
         self.__index_controller.initialize()

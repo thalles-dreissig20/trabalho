@@ -1,30 +1,25 @@
 from models.company import Company
 
 class Invoice:
-    def __init__(self, codigo: str, tipo: str, data: str, valor_total: float, empresa: Company):
-        self.codigo = codigo
-        self.tipo = tipo  # "NF" ou "Fatura"
-        self.data = data
-        self.valor_total = valor_total
-        self.empresa = empresa  # agregação reversa
-        self.aprovada = False
-        self.homologada = False
+    def __init__(self, code: str, type: str, date: str, total_price: float, company: Company):
+        self.code = code
+        self.type = type
+        self.date = date
+        self.total_price = total_price
+        self.company = company
+        self.approved = False
 
-    def aprovar(self):
-        self.aprovada = True
-
-    def homologar(self):
-        self.homologada = True
+    def approved_invoice(self):
+        self.approved = True
 
     def __str__(self):
         return (
             f"╔══════════════════════════════════════════╗\n"
-            f"║ Código:         {self.codigo}\n"
-            f"║ Tipo:           {self.tipo}\n"
-            f"║ Data:           {self.data}\n"
-            f"║ Valor Total:    R$ {self.valor_total:.2f}\n"
-            f"║ Aprovada:       {self.aprovada}\n"
-            f"║ Homologada:     {self.homologada}\n"
+            f"║ Código:         {self.code}\n"
+            f"║ Tipo:           {self.type}\n"
+            f"║ Data:           {self.date}\n"
+            f"║ Valor Total:    R$ {self.total_price:.2f}\n"
+            f"║ Aprovada:       {self.approved}\n"
             f"╚══════════════════════════════════════════╝ \n" 
-            f"{self.empresa}\n"
+            f"{self.company}\n"
         )
