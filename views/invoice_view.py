@@ -15,13 +15,14 @@ class InvoiceView:
         tipo = input("Tipo (NF/Fatura): ")
         data = input("Data (YYYY-MM-DD): ")
         valor_total = float(input("Valor total: "))
-        empresa = input("Nome da empresa (simulado): ")
-        return codigo, tipo, data, valor_total, empresa
+        return codigo, tipo, data, valor_total
 
     def show_invoices(self, invoices):
         print("\n--- NOTAS FISCAIS ---")
         for i, inv in enumerate(invoices):
-            print(f"{i}. {inv}")
+            print(f"[{i}]")
+            print(inv)
+            print()
 
     def select_invoice_index(self, invoices):
         self.show_invoices(invoices)

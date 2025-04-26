@@ -30,7 +30,9 @@ class CompanyView:
     def show_companies(self, empresas):
         print("\n--- EMPRESAS ---")
         for i, empresa in enumerate(empresas):
-            print(f"{i}. {empresa}")
+            print(f"[{i}]")
+            print(empresa)
+            print()
 
     def show_message(self, msg):
         print(f"\n{msg}")

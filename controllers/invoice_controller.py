@@ -1,4 +1,5 @@
 from views.invoice_view import InvoiceView
+from views.company_view import CompanyView
 from models.invoice import Invoice
 
 
@@ -7,6 +8,7 @@ class InvoiceController:
         self.__invoices = []
         self.__index_controller = index_controller
         self.__invoice_view = InvoiceView()
+        self.__company_view = CompanyView()
 
     def open_screen(self):
         options_list = {1: self.register_invoice, 2: self.list_invoices, 3: self.update_invoice, 4: self.delete_invoice, 0: self.back}
@@ -20,8 +22,26 @@ class InvoiceController:
 
     # Registrar uma invoice;
     def register_invoice(self):
-        codigo, tipo, data, valor_total, empresa = self.__invoice_view.get_invoice_data()
-        invoice = Invoice(codigo, tipo, data, valor_total, empresa)
+        companies = self.__index_controller.get_company_controller()
+
+        if not companies:
+            self.__company_view.show_message("Nenhuma empresa cadastrada. Cadastre uma empresa antes.")
+            return
+
+        # Listar empresas para o usuário escolher
+        self.__company_view.show_companies(companies)
+
+        try:
+            index = int(input("Escolha o número da empresa: "))
+            company = companies[index]
+        except (ValueError, IndexError):
+            self.__company_view.show_message("Empresa inválida.")
+            return
+
+        # Coletar os outros dados da nota
+        code, type, date, total_price = self.__invoice_view.get_invoice_data()
+        
+        invoice = Invoice(code, type, date, total_price, company)
         self.__invoices.append(invoice)
         self.__invoice_view.show_message("Nota fiscal cadastrada com sucesso.")
 
