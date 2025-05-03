@@ -1,4 +1,16 @@
 class InvoiceView:
+    def __str__(self):
+        return (
+            f"╔══════════════════════════════════════════╗\n"
+            f"║ Código:         {self.__code}\n"
+            f"║ Tipo:           {self.__type}\n"
+            f"║ Data:           {self.__date}\n"
+            f"║ Valor Total:    R$ {self.__total_price:.2f}\n"
+            f"║ Aprovada:       {self.__approved}\n"
+            f"╚══════════════════════════════════════════╝ \n" 
+            f"{self.__company}\n"
+        )
+    
     def main_menu(self):
         print("\n===== MENU =====")
         print("1. Cadastrar nota")
@@ -11,7 +23,7 @@ class InvoiceView:
         return opcao
     
 
-    def get_invoice_data(self):
+    def form(self):
         codigo = input("Código da nota: ")
         tipo = input("Tipo (NF/Fatura): ")
         data = input("Data (YYYY-MM-DD): ")
@@ -22,10 +34,15 @@ class InvoiceView:
         print("\n--- NOTAS FISCAIS ---")
         for i, inv in enumerate(invoices):
             print(f"[{i}]")
-            print(inv)
+            print(f"Código: {inv.code}")
+            print(f"Tipo: {inv.type}")
+            print(f"Data: {inv.date}")
+            print(f"Total: R$ {inv.total_price:,.2f}")
+            print(f"Empresa: {inv.company.social_reason}")
+            print(f"Entidade Associada: {inv.entity.social_reason}")
             print()
 
-    def select_invoice_index(self, invoices):
+    def get_invoice(self, invoices):
         self.show_invoices(invoices)
         try:
             index = int(input("Escolha o número da nota: "))
@@ -39,29 +56,26 @@ class InvoiceView:
 
     def update_invoice_fields(self, invoice):
         while True:
-            print(f"\n--- Editar Nota: {invoice} ---")
+            print(f"\n--- Editar Nota: {invoice.code} ---")
             print("1. Código")
             print("2. Tipo")
             print("3. Data")
             print("4. Valor total")
-            print("5. Empresa")
             print("0. Voltar")
             op = input("Escolha o campo a editar: ")
 
             match op:
                 case "1":
-                    invoice.codigo = input("Novo código: ")
+                    invoice.code = input("Novo código: ")
                 case "2":
-                    invoice.tipo = input("Novo tipo (NF/Fatura): ")
+                    invoice.type = input("Novo tipo (NF/Fatura): ")
                 case "3":
-                    invoice.data = input("Nova data (YYYY-MM-DD): ")
+                    invoice.date = input("Nova data (YYYY-MM-DD): ")
                 case "4":
                     try:
-                        invoice.valor_total = float(input("Novo valor total: "))
+                        invoice.total_price = float(input("Novo valor total: "))
                     except ValueError:
                         print("Valor inválido.")
-                case "5":
-                    invoice.empresa = input("Nova empresa: ")
                 case "0":
                     break
                 case _:

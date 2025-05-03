@@ -1,5 +1,3 @@
-from models.tax import Tax
-
 class Entity:
     def __init__(
         self,
@@ -9,47 +7,73 @@ class Entity:
         email: str = "",
         phone: str = ""
     ):
-        self.cnpj = cnpj
-        self.social_reason = social_reason
-        self.amount = amount 
-        self.email = email
-        self.phone = phone
-        self.companies = []
-        self.__taxes = [
-            Tax("ISS", 5.0, "Serviço"),
-            Tax("ICMS", 18.0, "Produto"),
-            Tax("INSS", 11.0, "Folha"),
-        ]
+        self.__cnpj = cnpj
+        self.__social_reason = social_reason
+        self.__amount = amount 
+        self.__email = email
+        self.__phone = phone
+        self.__companies = []
+        self.__invoices = []
         
-
-    def __str__(self):
-        companies_str = "\n".join([
-            f"║ {idx}. {company.social_reason} CNPJ: {company.cnpj}"
-            for idx, company in enumerate(self.companies, start=1)
-        ])
-        return (
-            f"╔════════════════════════════════════════════════════╗\n"
-            f"║ Nome:          {self.social_reason}\n"
-            f"║ CNPJ:          {self.cnpj}\n"
-            f"║ Capital:       R$ {self.amount:,.2f}\n"
-            f"║ Email:         {self.email or 'N/A'}\n"
-            f"║ Telefone:      {self.phone or 'N/A'}\n"
-            f"╚════════════════════════════════════════════════════╝\n"
-            f"╔════════════════════════════════════════════════════╗\n"
-            f"║ Companias cadastradas:\n"
-            f"{companies_str if companies_str else '║ Nenhuma empresa cadastrada.'}\n"
-            f"╚════════════════════════════════════════════════════╝\n"
-        )
-
     ################################################################################
     # METHODS;
-
-    def add_company(self, company):
-        self.companies.append(company)
-
-    def get_companies(self):
-        return self.companies
 
     def list_companies(self):
         for idx, company in enumerate(self.companies, start=1):
             print(f"{idx}. {company.social_reason} - CNPJ: {company.cnpj}")
+
+    @property
+    def cnpj(self):
+        return self.__cnpj
+
+    @property
+    def social_reason(self):
+        return self.__social_reason 
+    
+    @property
+    def amount(self):
+        return self.__amount 
+    
+    @property
+    def email(self):
+        return self.__email  
+    
+    @property
+    def phone(self):
+        return self.__phone  
+    
+    @property
+    def companies(self):
+        return self.__companies  
+    
+    @property
+    def invoices(self):
+        return self.__invoices
+
+    @cnpj.setter
+    def codcnpje(self, cnpj):
+        self.__cnpj = cnpj
+
+    @social_reason.setter
+    def social_reason(self, social_reason):
+        self.__social_reason = social_reason
+
+    @amount.setter
+    def amount(self, amount):
+        self.__amount = amount
+
+    @email.setter
+    def email(self, email):
+        self.__email = email
+
+    @phone.setter
+    def phone(self, phone):
+        self.__phone = phone
+
+    @companies.setter
+    def companies(self, company):
+        self.__companies.append(company)
+    
+    @invoices.setter
+    def invoices(self, invoice):
+        self.__invoices.append(invoice)

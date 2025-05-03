@@ -1,12 +1,20 @@
 class Tax:
-    def __init__(self, name: str, rate: float, category: str, description: str = ""):
-        self.name = name        
-        self.rate = rate        
-        self.category = category
-        self.description = description
+    def __init__(self, name: str, rate: float):
+        self.__name = name        
+        self.__rate = rate 
 
-    def calculate(self, amount: float) -> float:
-        return round(amount * (self.rate / 100), 2)
+    @property
+    def name(self):
+        return self.__name
+    
+    @property
+    def rate(self):
+        return self.__rate
 
-    def __repr__(self):
-        return f"<Tax {self.name}: {self.rate}% ({self.category})>"
+    @name.setter
+    def name(self, name):
+        self.__name = name
+
+    @rate.setter
+    def type(self, rate):
+        self.__rate = rate

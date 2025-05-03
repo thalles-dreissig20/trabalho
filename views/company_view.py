@@ -1,5 +1,13 @@
 
 class CompanyView:
+    def __str__(self):
+        return (
+            f"╔══════════════════════════════════════════╗\n"
+            f"║ Empresa: {self.__social_reason}\n"
+            f"║ CNPJ:    {self.__cnpj}\n"
+            f"╚══════════════════════════════════════════╝"
+        )
+    
     def main_menu(self):
         print("\n===== MENU =====")
         print("1. Cadastrar empresa")
@@ -10,28 +18,30 @@ class CompanyView:
         opcao = int(input("Escolha a opcao:"))
         return opcao
     
-    def get_company_data(self):
+    def form(self):
         cnpj = input("Digite o CNPJ: ")
         nome = input("Digite a razão social: ")
         return cnpj, nome
 
-    def select_company_index(self, empresas):
-        if not empresas:
+    def get_company(self, companies):
+        if not companies:
             print("Nenhuma empresa cadastrada.")
             return None
-        self.show_companies(empresas)
+        self.show_companies(companies)
         index = int(input("Escolha o número da empresa: "))
-        if 0 <= index < len(empresas):
+        if 0 <= index < len(companies):
             return index
         else:
             print("Índice inválido.")
             return None
 
-    def show_companies(self, empresas):
+    def show_companies(self, companies):
         print("\n--- EMPRESAS ---")
-        for i, empresa in enumerate(empresas):
+        for i, company in enumerate(companies):
             print(f"[{i}]")
-            print(empresa)
+            print(f"Razão Social: {company.social_reason}")
+            print(f"CNPJ: {company.cnpj}")
+            print(f"Entidade Associada: {company.entity.social_reason}")
             print()
 
     def show_message(self, msg):

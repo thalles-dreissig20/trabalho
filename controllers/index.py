@@ -1,21 +1,18 @@
 from views.index import IndexView
+from controllers.entity_controller import EntityController
 from controllers.company_controller import CompanyController
 from controllers.invoice_controller import InvoiceController
-from models.entity import Entity
 
 class IndexController:
     def __init__(self):
-        self.__entity = Entity(
-            cnpj="12.345.678/0001-90", 
-            social_reason="Minha Empresa LTDA", 
-            amount=50000.00,
-            email="contato@minhaempresa.com", 
-            phone="(11) 1234-5678"
-        )
-
-        self.__company_controller = CompanyController(self, self.__entity)
-        self.__invoices_controller = InvoiceController(self, self.__entity)
+        self.__entity_controller = EntityController(self)
+        self.__company_controller = CompanyController(self)
+        self.__invoices_controller = InvoiceController(self)
         self.__view = IndexView()
+
+    
+    ################################################################################
+    # METHODS;
 
     def initialize(self):
         options_list = {
@@ -27,16 +24,8 @@ class IndexController:
         while True:
             options_list[self.__view.main_menu()]()
 
-
-
-
-    ################################################################################
-    # METHODS;
-
-    
-
     def entity(self):
-        print(self.__entity)
+        return self.__entity_controller.open_screen()
 
     def companies(self):
         return self.__company_controller.open_screen()
