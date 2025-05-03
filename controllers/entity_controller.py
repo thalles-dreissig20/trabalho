@@ -15,18 +15,21 @@ class EntityController:
 
 
     ################################################################################
-    # METHODS;
+    # MENU;
 
     def open_screen(self):
         options_list = {
             1: self.about, 
             2: self.list_companies, 
             3: self.list_invoices, 
+            4: self.report,
             0: self.back
         }
         while True:
             options_list[self.__entity_view.main_menu()]()
 
+    ################################################################################
+    # METHODS;
 
     def get_entity(self):
         return self.__entity
@@ -42,6 +45,9 @@ class EntityController:
     # Listar notas;
     def list_invoices(self):
         return self.__entity_view.show_invoices(self.__entity)
+    
+    def report(self):
+        return self.__entity_view.report(self.__entity)
 
     # Voltar;
     def back(self):

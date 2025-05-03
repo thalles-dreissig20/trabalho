@@ -10,9 +10,9 @@ class IndexController:
         self.__invoices_controller = InvoiceController(self)
         self.__view = IndexView()
 
-    
+
     ################################################################################
-    # METHODS;
+    # MENU;
 
     def initialize(self):
         options_list = {
@@ -23,6 +23,9 @@ class IndexController:
         }
         while True:
             options_list[self.__view.main_menu()]()
+
+    ################################################################################
+    # METHODS;
 
     def entity(self):
         return self.__entity_controller.open_screen()

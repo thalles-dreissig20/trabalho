@@ -11,7 +11,7 @@ class InvoiceController:
         self.__company_view = CompanyView()
 
     ################################################################################
-    # METHODS;
+    # MENU;
 
     def open_screen(self):
         options_list = {
@@ -24,6 +24,9 @@ class InvoiceController:
         }
         while True:
             options_list[self.__invoice_view.main_menu()]()
+
+    ################################################################################
+    # METHODS;
 
     # Registrar uma invoice;
     def register_invoice(self):

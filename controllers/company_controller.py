@@ -8,6 +8,10 @@ class CompanyController:
         self.__index_controller = index_controller
         self.__company_view = CompanyView()
 
+
+    ################################################################################
+    # MENU;
+
     def open_screen(self):
         options_list = {
             1: self.register_company, 
@@ -18,8 +22,6 @@ class CompanyController:
         }
         while True:
             options_list[self.__company_view.main_menu()]()
-
-
 
 
     ################################################################################
