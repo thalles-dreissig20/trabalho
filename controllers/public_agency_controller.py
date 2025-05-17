@@ -5,9 +5,9 @@ class PublicAgencyController:
     def __init__(self, index_controller):
         self.__public_agency = PublicAgency(
             cnpj="12.345.678/0001-90", 
-            social_reason="Minha Empresa LTDA", 
+            social_reason="Empresa complicada LTDA", 
             amount=50000.00,
-            email="contato@minhaempresa.com", 
+            email="contato@empresacomplicada.com", 
             phone="(11) 1234-5678"
         )    
 

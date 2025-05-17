@@ -1,13 +1,28 @@
+# Exception;
+from exceptions.index import MenuOptionError
+
 class PublicAgencyView:
     def main_menu(self):
-        print("\n===== MENU =====")
-        print("1. Sobre")
-        print("2. Listar companias")
-        print("3. Listar notas fiscais")
-        print("4. Relatorio")
-        print("0. Retornar")
-        opcao = int(input("Escolha a opção: "))
-        return opcao
+        while True:
+            try:
+                print("\n===== MENU =====")
+                print("1. Sobre")
+                print("2. Listar companias")
+                print("3. Listar notas fiscais")
+                print("4. Relatorio")
+                print("0. Retornar")
+                opcao = int(input("Escolha a opção: "))
+                
+                if opcao not in [0, 1, 2, 3, 4]:
+                    raise MenuOptionError()
+                return opcao
+            
+            except ValueError:
+                print("Entrada inválida. Por favor, digite um número.")
+            except MenuOptionError as e:
+                print(e)
+
+
 
     def show_public_agency(self, public_agency):
         """Exibe os dados principais da entidade (social reason, CNPJ, etc.)."""

@@ -1,15 +1,23 @@
 from models.public_agency import PublicAgency
 
 class Company:
+    _code = 1
     def __init__(self, cnpj: str, social_reason: str, public_agency: PublicAgency):
         if (isinstance(public_agency, PublicAgency)):
             self.__public_agency = public_agency
+
+        self.__code = Company._code
+        Company._code += 1  
         self.__cnpj = cnpj
         self.__social_reason = social_reason
         self.__invoices = []
 
     ################################################################################
     # METHODS;
+    @property
+    def code(self):
+        return self.__code
+    
     @property
     def cnpj(self):
         return self.__cnpj

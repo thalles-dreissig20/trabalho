@@ -2,8 +2,10 @@ from models.company import Company
 from models.public_agency import PublicAgency
 
 class Invoice:
-    def __init__(self, code: str, type: str, date: str, total_price: float, company: Company, public_agency: PublicAgency):
-        self.__code = code
+    _code = 1
+    def __init__(self, type: str, date: str, total_price: float, company: Company, public_agency: PublicAgency):
+        self.__code = Invoice._code
+        Invoice._code += 1  
         self.__type = type
         self.__date = date
         self.__total_price = total_price
@@ -43,10 +45,6 @@ class Invoice:
     @property
     def taxes(self):
         return self.__taxes
-
-    @code.setter
-    def code(self, code):
-        self.__code = code
 
     @type.setter
     def type(self, type):

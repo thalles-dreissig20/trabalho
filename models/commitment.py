@@ -35,10 +35,6 @@ class Commitment:
     @property
     def paid(self):
         return self.__paid
-    
-    @code.setter
-    def code(self, code):
-        self.__code = code
 
     @description.setter
     def description(self, description):

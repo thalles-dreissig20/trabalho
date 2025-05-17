@@ -19,10 +19,6 @@ class PublicAgency:
     ################################################################################
     # METHODS;
 
-    def list_companies(self):
-        for idx, company in enumerate(self.companies, start=1):
-            print(f"{idx}. {company.social_reason} - CNPJ: {company.cnpj}")
-
     @property
     def cnpj(self):
         return self.__cnpj

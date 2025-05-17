@@ -1,3 +1,6 @@
+# Exceptions;
+from exceptions.index import MenuOptionError
+
 class InvoiceView:
     def __str__(self):
         return (
@@ -12,35 +15,51 @@ class InvoiceView:
         )
     
     def main_menu(self):
-        print("\n===== MENU =====")
-        print("1. Cadastrar nota")
-        print("2. Listar notas")
-        print("3. Alterar nota")
-        print("4. Aprovar nota")
-        print("5. Excluir nota")
-        print("0 - Retornar")
-        opcao = int(input("Escolha a opcao:"))
-        return opcao
+        while True:
+            try:
+                print("\n===== MENU =====")
+                print("1. Cadastrar nota")
+                print("2. Listar notas")
+                print("3. Alterar nota")
+                print("4. Aprovar nota")
+                print("5. Excluir nota")
+                print("0 - Retornar")
+                opcao = int(input("Escolha a opcao:"))
+                
+                if opcao not in [0, 1, 2, 3, 4, 5]:
+                    raise MenuOptionError()
+                return opcao
+            
+            except ValueError:
+                print("Entrada inválida. Por favor, digite um número.")
+            except MenuOptionError as e:
+                print(e)
     
 
     def form(self):
-        codigo = input("Código da nota: ")
         tipo = input("Tipo (NF/Fatura): ")
         data = input("Data (YYYY-MM-DD): ")
         valor_total = float(input("Valor total: "))
-        return codigo, tipo, data, valor_total
+        return tipo, data, valor_total
+
 
     def show_invoices(self, invoices):
         print("\n--- NOTAS FISCAIS ---")
         for i, inv in enumerate(invoices):
-            print(f"[{i}]")
-            print(f"Código: {inv.code}")
-            print(f"Tipo: {inv.type}")
-            print(f"Data: {inv.date}")
-            print(f"Total: R$ {inv.total_price:,.2f}")
-            print(f"Empresa: {inv.company.social_reason}")
-            print(f"Entidade Associada: {inv.public_agency.social_reason}")
-            print()
+            print(
+                f"╔══════════════════════════════════════════════════════════════════════╗\n"
+                f"║ Código:       {inv.code}\n"
+                f"║ Tipo:         {inv.type}\n"
+                f"║ Data:         {inv.date}\n"
+                f"║ Valor Total:  R$ {inv.total_price:,.2f}\n"
+                f"║ Aprovada:     {inv.approved}\n"
+                f"║ ----\n"
+                f"║ Empresa prestadora: {inv.company.social_reason}\n"
+                f"║ CNPJ:               {inv.company.cnpj}\n"
+                f"║ ----\n"
+                f"║ Agencia pública Associada:   {inv.public_agency.social_reason}\n"
+                f"╚══════════════════════════════════════════════════════════════════════╝\n"
+            )
 
     def get_invoice(self, invoices):
         self.show_invoices(invoices)
@@ -80,6 +99,3 @@ class InvoiceView:
                     break
                 case _:
                     print("Opção inválida.")
-                    
-    def show_message(self, msg):
-        print(f"\n{msg}")

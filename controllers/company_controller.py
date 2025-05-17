@@ -8,6 +8,14 @@ class CompanyController:
         self.__index_controller = index_controller
         self.__company_view = CompanyView()
 
+        # TODO: Temporary data;
+        c1 = Company("12345678000195", "Empresa A", self.__index_controller.agency().get_public_agency())
+        c2 = Company("98765432000196", "Empresa B", self.__index_controller.agency().get_public_agency())
+        c3 = Company("12345678000197", "Empresa C", self.__index_controller.agency().get_public_agency())
+        for company in [c1, c2, c3]:
+            self.__companies.append(company)
+            self.__index_controller.agency().get_public_agency().companies = company
+
 
 
     ################################################################################
@@ -34,7 +42,7 @@ class CompanyController:
     # Listar companias;
     def list_companies(self):
         if len(self.__companies) == 0:
-            self.__company_view.show_message("Não há empresas cadastradas.")
+            self.__index_controller.get_view().show_message("Não há empresas cadastradas.")
         else:
             self.__company_view.show_companies(self.__companies)
     
@@ -43,12 +51,12 @@ class CompanyController:
         # Get form;
         cnpj, social_reason = self.__company_view.form()
         # Set Company;
-        public_agency = self.__index_controller.get_public_agency().get_public_agency()
+        public_agency = self.__index_controller.agency().get_public_agency()
         company = Company(cnpj, social_reason, public_agency)
         self.__companies.append(company)
         public_agency.companies = company
         
-        self.__company_view.show_message("Empresa cadastrada com sucesso.")
+        self.__index_controller.get_view().show_message("Empresa cadastrada com sucesso.")
 
     # Atualizar uma compania;
     def update_company(self):
@@ -57,17 +65,17 @@ class CompanyController:
             cnpj, social_reason = self.__company_view.form()
             self.__companies[index].cnpj = cnpj
             self.__companies[index].social_reason = social_reason
-            self.__company_view.show_message("Empresa atualizada.")
+            self.__index_controller.get_view().show_message("Empresa atualizada.")
 
     # Deletar uma compania;
     def delete_company(self):
         if len(self.__companies) == 0:
-            self.__company_view.show_message("Não há empresas cadastradas.")
+            self.__index_controller.get_view().show_message("Não há empresas cadastradas.")
         else:
             index = self.__company_view.get_company(self.__companies)
             if index is not None:
                 company = self.__companies[index]
-                public_agency = self.__index_controller.get_public_agency().get_public_agency()
+                public_agency = self.__index_controller.agency().get_public_agency()
 
                 public_agency.companies.remove(company)
                 self.__companies.remove(company)

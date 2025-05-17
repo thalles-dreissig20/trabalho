@@ -34,12 +34,13 @@ class CommitmentView:
     def show_commitments(self, commitments):
         print("\n--- COMPROMISSOS ---")
         for i, commitment in enumerate(commitments):
-            print(f"[{i}]")
-            print(f"Compromisso: {commitment.description}")
-            print(f"Data: {commitment.date}")
-            print(f"Valor: {commitment.amount}")
-            print(f"Agencia pública Associada: {commitment.public_agency.social_reason}")
-            print()
-
-    def show_message(self, msg):
-        print(f"\n{msg}")
+            print(
+                f"╔══════════════════════════════════════════════════════════╗\n"
+                f"║ Código:       {commitment.code}\n"
+                f"║ Descrição:    {commitment.description}\n"
+                f"║ Data:         {commitment.date}\n"
+                f"║ Valor:        R$ {commitment.amount}\n"
+                f"║ ----\n"
+                f"║ Agencia pública Associada:   {commitment.public_agency.social_reason}\n"
+                f"╚══════════════════════════════════════════════════════════╝\n"
+            )
