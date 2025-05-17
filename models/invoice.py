@@ -1,14 +1,14 @@
 from models.company import Company
-from models.entity import Entity
+from models.public_agency import PublicAgency
 
 class Invoice:
-    def __init__(self, code: str, type: str, date: str, total_price: float, company: Company, entity: Entity):
+    def __init__(self, code: str, type: str, date: str, total_price: float, company: Company, public_agency: PublicAgency):
         self.__code = code
         self.__type = type
         self.__date = date
         self.__total_price = total_price
         self.__company = company
-        self.__entity = entity
+        self.__public_agency = public_agency
         self.__approved = False
         self.__taxes = []
 
@@ -33,8 +33,8 @@ class Invoice:
         return self.__company
     
     @property
-    def entity(self):
-        return self.__entity
+    def public_agency(self):
+        return self.__public_agency
     
     @property
     def approved(self):
@@ -64,9 +64,9 @@ class Invoice:
     def company(self, company):
         self.__company = company
 
-    @entity.setter
-    def entity(self, entity):
-        self.__entity = entity
+    @public_agency.setter
+    def public_agency(self, public_agency):
+        self.__public_agency = public_agency
 
     @approved.setter
     def approved(self, approved):

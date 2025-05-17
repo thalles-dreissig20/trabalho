@@ -41,7 +41,7 @@ class CompanyView:
             print(f"[{i}]")
             print(f"Razão Social: {company.social_reason}")
             print(f"CNPJ: {company.cnpj}")
-            print(f"Entidade Associada: {company.entity.social_reason}")
+            print(f"Entidade Associada: {company.public_agency.social_reason}")
             print()
 
     def show_message(self, msg):

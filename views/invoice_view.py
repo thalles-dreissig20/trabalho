@@ -39,7 +39,7 @@ class InvoiceView:
             print(f"Data: {inv.date}")
             print(f"Total: R$ {inv.total_price:,.2f}")
             print(f"Empresa: {inv.company.social_reason}")
-            print(f"Entidade Associada: {inv.entity.social_reason}")
+            print(f"Entidade Associada: {inv.public_agency.social_reason}")
             print()
 
     def get_invoice(self, invoices):

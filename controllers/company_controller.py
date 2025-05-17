@@ -9,9 +9,9 @@ class CompanyController:
         self.__company_view = CompanyView()
 
 
+
     ################################################################################
     # MENU;
-
     def open_screen(self):
         options_list = {
             1: self.register_company, 
@@ -27,18 +27,26 @@ class CompanyController:
     ################################################################################
     # METHODS;
 
+    # Obter compania;
     def get_company(self, company):
         return self.__companies[company]
+    
+    # Listar companias;
+    def list_companies(self):
+        if len(self.__companies) == 0:
+            self.__company_view.show_message("Não há empresas cadastradas.")
+        else:
+            self.__company_view.show_companies(self.__companies)
     
     # Registrar uma compania;
     def register_company(self):
         # Get form;
         cnpj, social_reason = self.__company_view.form()
         # Set Company;
-        entity = self.__index_controller._IndexController__entity_controller.get_entity()
-        company = Company(cnpj, social_reason, entity)
+        public_agency = self.__index_controller.get_public_agency().get_public_agency()
+        company = Company(cnpj, social_reason, public_agency)
         self.__companies.append(company)
-        entity.companies = company
+        public_agency.companies = company
         
         self.__company_view.show_message("Empresa cadastrada com sucesso.")
 
@@ -51,13 +59,6 @@ class CompanyController:
             self.__companies[index].social_reason = social_reason
             self.__company_view.show_message("Empresa atualizada.")
 
-    # Listar companias;
-    def list_companies(self):
-        if len(self.__companies) == 0:
-            self.__company_view.show_message("Não há empresas cadastradas.")
-        else:
-            self.__company_view.show_companies(self.__companies)
-
     # Deletar uma compania;
     def delete_company(self):
         if len(self.__companies) == 0:
@@ -66,9 +67,9 @@ class CompanyController:
             index = self.__company_view.get_company(self.__companies)
             if index is not None:
                 company = self.__companies[index]
-                entity = self.__index_controller._IndexController__entity_controller.get_entity()
+                public_agency = self.__index_controller.get_public_agency().get_public_agency()
 
-                entity.companies.remove(company)
+                public_agency.companies.remove(company)
                 self.__companies.remove(company)
 
     # Voltar;

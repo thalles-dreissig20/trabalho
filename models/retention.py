@@ -1,8 +1,20 @@
 class Retention:
-    def __init__(self, tipo: str, valor: float, nota_fiscal: 'Invoice'):
-        self.tipo = tipo
-        self.valor = valor
-        self.nota_fiscal = nota_fiscal
+    def __init__(self, name: str, rate: float):
+        self.__name = name        
+        self.__rate = rate 
 
-    def __str__(self):
-        return f"Retenção: {self.tipo} - Valor: R$ {self.valor:.2f} - Nota Fiscal: {self.nota_fiscal.codigo}"
+    @property
+    def name(self):
+        return self.__name
+    
+    @property
+    def rate(self):
+        return self.__rate
+
+    @name.setter
+    def name(self, name):
+        self.__name = name
+
+    @rate.setter
+    def type(self, rate):
+        self.__rate = rate

@@ -1,4 +1,4 @@
-class Entity:
+class PublicAgency:
     def __init__(
         self,
         cnpj: str,
@@ -14,6 +14,7 @@ class Entity:
         self.__phone = phone
         self.__companies = []
         self.__invoices = []
+        self.__commitments = []
         
     ################################################################################
     # METHODS;
@@ -49,6 +50,10 @@ class Entity:
     @property
     def invoices(self):
         return self.__invoices
+    
+    @property
+    def commitments(self):
+        return self.__commitments
 
     @cnpj.setter
     def codcnpje(self, cnpj):
@@ -77,3 +82,7 @@ class Entity:
     @invoices.setter
     def invoices(self, invoice):
         self.__invoices.append(invoice)
+
+    @commitments.setter
+    def commitments(self, commitment):
+        self.__commitments.append(commitment)

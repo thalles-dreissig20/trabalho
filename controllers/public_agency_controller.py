@@ -1,17 +1,18 @@
-from models.entity import Entity
-from views.entity_view import EntityView
+from models.public_agency import PublicAgency
+from views.public_agency_view import PublicAgencyView
 
-class EntityController:
+class PublicAgencyController:
     def __init__(self, index_controller):
-        self.__entity = Entity(
+        self.__public_agency = PublicAgency(
             cnpj="12.345.678/0001-90", 
             social_reason="Minha Empresa LTDA", 
             amount=50000.00,
             email="contato@minhaempresa.com", 
             phone="(11) 1234-5678"
-        )
+        )    
+
         self.__index_controller = index_controller
-        self.__entity_view = EntityView()
+        self.__public_agency_view = PublicAgencyView()
 
 
     ################################################################################
@@ -26,28 +27,28 @@ class EntityController:
             0: self.back
         }
         while True:
-            options_list[self.__entity_view.main_menu()]()
+            options_list[self.__public_agency_view.main_menu()]()
 
     ################################################################################
     # METHODS;
 
-    def get_entity(self):
-        return self.__entity
+    def get_public_agency(self):
+        return self.__public_agency
     
     # Dados;
     def about(self):
-        return self.__entity_view.show_entity(self.__entity)
+        return self.__public_agency_view.show_public_agency(self.__public_agency)
     
     # Listar companias;
     def list_companies(self):
-        return self.__entity_view.show_companies(self.__entity)
+        return self.__public_agency_view.show_companies(self.__public_agency)
     
     # Listar notas;
     def list_invoices(self):
-        return self.__entity_view.show_invoices(self.__entity)
+        return self.__public_agency_view.show_invoices(self.__public_agency)
     
     def report(self):
-        return self.__entity_view.report(self.__entity)
+        return self.__public_agency_view.report(self.__public_agency)
 
     # Voltar;
     def back(self):

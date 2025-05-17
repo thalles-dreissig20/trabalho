@@ -1,24 +1,36 @@
+# Views;
 from views.index import IndexView
-from controllers.entity_controller import EntityController
+
+# Controllers;
+from controllers.public_agency_controller import PublicAgencyController
 from controllers.company_controller import CompanyController
 from controllers.invoice_controller import InvoiceController
+from controllers.commitment_controller import CommitmentController
+#from controllers.retention_controller import RetentionController
 
 class IndexController:
     def __init__(self):
-        self.__entity_controller = EntityController(self)
-        self.__company_controller = CompanyController(self)
-        self.__invoices_controller = InvoiceController(self)
+        # Views;
         self.__view = IndexView()
 
+        # Controllers;
+        self.__public_agency_controller = PublicAgencyController(self)
+        self.__company_controller = CompanyController(self)
+        self.__invoices_controller = InvoiceController(self)
+        self.__commitment_controller = CommitmentController(self)
+ #       self.__retention_controller = RetentionController(self)
+        
 
     ################################################################################
     # MENU;
 
     def initialize(self):
         options_list = {
-            1: self.entity,
+            1: self.public_agency,
             2: self.companies,
             3: self.invoices,
+            4: self.commitments,
+            # 5: self.retention,
             0: self.exit
         }
         while True:
@@ -27,14 +39,23 @@ class IndexController:
     ################################################################################
     # METHODS;
 
-    def entity(self):
-        return self.__entity_controller.open_screen()
+    def get_public_agency(self):
+        return self.__public_agency_controller
+
+    def public_agency(self):
+        return self.__public_agency_controller.open_screen()
 
     def companies(self):
         return self.__company_controller.open_screen()
     
     def invoices(self):
         return self.__invoices_controller.open_screen()
+    
+    def commitments(self):
+        return self.__commitment_controller.open_screen()
+    
+    def retention(self):
+        return self.__retention_controller.open_screen()
     
     def exit(self):
         exit(0)

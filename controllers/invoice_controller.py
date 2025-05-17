@@ -31,19 +31,19 @@ class InvoiceController:
     # Registrar uma invoice;
     def register_invoice(self):
         # Pegar entidade;
-        entity = self.__index_controller._IndexController__entity_controller.get_entity()
+        public_agency = self.__index_controller.get_public_agency().get_public_agency()
         
 
-        if not entity.companies:
+        if not public_agency.companies:
             self.__company_view.show_message("Nenhuma empresa cadastrada. Cadastre uma empresa antes.")
             return
 
         # Listar empresas;
-        self.__company_view.show_companies(entity.companies)
+        self.__company_view.show_companies(public_agency.companies)
 
         try:
             index = int(input("Escolha o número da empresa: "))
-            company = entity.companies[index]
+            company = public_agency.companies[index]
         except (ValueError, IndexError):
             self.__company_view.show_message("Empresa inválida.")
             return
@@ -52,9 +52,9 @@ class InvoiceController:
         code, type, date, total_price = self.__invoice_view.form()
         
         # Registrar nota;
-        invoice = Invoice(code, type, date, total_price, company, entity)
+        invoice = Invoice(code, type, date, total_price, company, public_agency)
         self.__invoices.append(invoice)
-        entity.invoices = invoice
+        public_agency.invoices = invoice
         company.invoices = invoice
 
         self.__invoice_view.show_message("Nota fiscal cadastrada com sucesso.")
@@ -120,10 +120,10 @@ class InvoiceController:
                     self.__invoice_view.show_message("Não é possível deletar uma nota já aprovada.")
                     return
                 
-                entity = self.__index_controller._IndexController__entity_controller.get_entity()
+                public_agency = self.__index_controller.get_public_agency().get_public_agency()
                 company = self.__index_controller._IndexController__company_controller.get_company(invoice.company)
 
-                entity.invoices.remove(invoice)
+                public_agency.invoices.remove(invoice)
                 company.invoices.remove(invoice)
                 self.__invoices.remove(invoice)
             
