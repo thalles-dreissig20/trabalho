@@ -13,7 +13,7 @@ class CompanyView:
     def main_menu(self):
         while True:
             try:
-                print("\n===== MENU =====")
+                print("\n===== MENU EMPRESAS =====")
                 print("1. Cadastrar empresa")
                 print("2. Listar empresas")
                 print("3. Alterar empresa")
@@ -62,7 +62,7 @@ class CompanyView:
                 f"║ Código:       {company.code}\n"
                 f"║ Razão Social: {company.social_reason}\n"
                 f"║ CNPJ:         {company.cnpj}\n"
-                f"║ ----\n"
+                f"║ ----------------------------------------------------------\n"
                 f"║ Agencia pública Associada:   {company.public_agency.social_reason}\n"
                 f"╚══════════════════════════════════════════════════════════╝\n"
             )

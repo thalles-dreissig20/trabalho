@@ -9,12 +9,12 @@ class CompanyController:
         self.__company_view = CompanyView()
 
         # TODO: Temporary data;
-        c1 = Company("12345678000195", "Empresa A", self.__index_controller.agency().get_public_agency())
-        c2 = Company("98765432000196", "Empresa B", self.__index_controller.agency().get_public_agency())
-        c3 = Company("12345678000197", "Empresa C", self.__index_controller.agency().get_public_agency())
+        c1 = Company("12.345.678/0001-95", "Empresa A", self.__index_controller.agency_controller().get_public_agency())
+        c2 = Company("98.765.432/0001-96", "Empresa B", self.__index_controller.agency_controller().get_public_agency())
+        c3 = Company("12.345.678/0001-97", "Empresa C", self.__index_controller.agency_controller().get_public_agency())
         for company in [c1, c2, c3]:
             self.__companies.append(company)
-            self.__index_controller.agency().get_public_agency().companies = company
+            self.__index_controller.agency_controller().get_public_agency().companies = company
 
 
 
@@ -51,7 +51,7 @@ class CompanyController:
         # Get form;
         cnpj, social_reason = self.__company_view.form()
         # Set Company;
-        public_agency = self.__index_controller.agency().get_public_agency()
+        public_agency = self.__index_controller.agency_controller().get_public_agency()
         company = Company(cnpj, social_reason, public_agency)
         self.__companies.append(company)
         public_agency.companies = company
@@ -75,7 +75,7 @@ class CompanyController:
             index = self.__company_view.get_company(self.__companies)
             if index is not None:
                 company = self.__companies[index]
-                public_agency = self.__index_controller.agency().get_public_agency()
+                public_agency = self.__index_controller.agency_controller().get_public_agency()
 
                 public_agency.companies.remove(company)
                 self.__companies.remove(company)

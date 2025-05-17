@@ -5,7 +5,7 @@ class RetentionView:
     def main_menu(self):
         while True:
             try:
-                print("\n===== MENU =====")
+                print("\n===== MENU RETENÇAO =====")
                 print("1. Listar retenções")
                 print("2. Atualizar retenções")
                 print("0 - Retornar")
@@ -27,7 +27,7 @@ class RetentionView:
             code = int(input("Digite o código da retenção: "))
             for i, retention in enumerate(retentions):
                 if retention.code == code:
-                    return i 
+                    return retention
             print("Código inválido.")
             return None 
         except ValueError:
@@ -52,3 +52,4 @@ class RetentionView:
                 f"║ Ativo:        {'Sim' if retention.active else 'Não'}\n"
                 f"╚═════════════════════════╝\n"
             )
+        

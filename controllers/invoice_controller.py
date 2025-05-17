@@ -33,7 +33,7 @@ class InvoiceController:
     # Registrar uma invoice;
     def register_invoice(self):
         # Pegar entidade;
-        public_agency = self.__index_controller.agency().get_public_agency()
+        public_agency = self.__index_controller.agency_controller().get_public_agency()
         
 
         if not public_agency.companies:
@@ -46,10 +46,24 @@ class InvoiceController:
             return
 
         # Coletar dados;
-        type, date, total_price = self.__invoice_view.form()
-        
+        type, date, total_price, tax = self.__invoice_view.form()
+
+        # Taxas;
+        retentions = []
+        if tax.upper() == "S":
+            while True:
+                retention = self.__index_controller.retention_controller().get_retention()
+                retentions.append(retention)
+
+                continue_adding = input("Deseja adicionar mais retenções? (S/N): ").strip().upper()
+                if continue_adding == "N":
+                    break
+                elif continue_adding != "S":
+                    self.__index_controller.get_view().show_message("Opção inválida. Tente novamente.")
+
+
         # Registrar nota;
-        invoice = Invoice(type, date, total_price, company, public_agency)
+        invoice = Invoice(type, date, total_price, company, public_agency, retentions)
         self.__invoices.append(invoice)
         public_agency.invoices = invoice
         company.invoices = invoice
@@ -69,12 +83,11 @@ class InvoiceController:
         if not self.__invoices:
             self.__index_controller.get_view().show_message("Nenhuma nota cadastrada.")
         else:
-            index = self.__invoice_view.get_invoice(self.__invoices)
-            if index is None:
+            invoice = self.__invoice_view.get_invoice(self.__invoices)
+            if invoice is None:
                 return
             
             # Validação se já foi aprovada;
-            invoice = self.__invoices[index]
             if invoice.approved:
                 self.__index_controller.get_view().show_message("Não é possível atualizar uma nota já aprovada.")
                 return
@@ -120,7 +133,7 @@ class InvoiceController:
                     self.__index_controller.get_view().show_message("Não é possível deletar uma nota já aprovada.")
                     return
                 
-                public_agency = self.__index_controller.agency().get_public_agency()
+                public_agency = self.__index_controller.agency_controller().get_public_agency()
                 company = self.__index_controller._IndexController__company_controller.get_company(invoice.company)
 
                 public_agency.invoices.remove(invoice)

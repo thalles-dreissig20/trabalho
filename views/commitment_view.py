@@ -2,7 +2,7 @@
 
 class CommitmentView:
     def main_menu(self):
-        print("\n===== MENU =====")
+        print("\n===== MENU COMPROMISSO =====")
         print("1. Cadastrar compromisso")
         print("2. Listar compromissos")
         print("3. Alterar compromisso")
@@ -40,7 +40,7 @@ class CommitmentView:
                 f"║ Descrição:    {commitment.description}\n"
                 f"║ Data:         {commitment.date}\n"
                 f"║ Valor:        R$ {commitment.amount}\n"
-                f"║ ----\n"
+                f"║ ----------------------------------------------------------\n"
                 f"║ Agencia pública Associada:   {commitment.public_agency.social_reason}\n"
                 f"╚══════════════════════════════════════════════════════════╝\n"
             )

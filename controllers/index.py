@@ -54,8 +54,11 @@ class IndexController:
     def retention(self):
         return self.__retention_controller.open_screen()
     
-    def agency(self):
+    def agency_controller(self):
         return self.__public_agency_controller
+    
+    def retention_controller(self):
+        return self.__retention_controller
     
     def get_view(self):
         return self.__view

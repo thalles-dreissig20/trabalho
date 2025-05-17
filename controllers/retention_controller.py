@@ -32,6 +32,9 @@ class RetentionController:
     ################################################################################
     # METHODS;
 
+    def get_retention(self):
+        return self.__retention_view.get_retention(self.__retentions)
+
     # List Retention;
     def list_retentions(self):
         if len(self.__retentions) == 0:

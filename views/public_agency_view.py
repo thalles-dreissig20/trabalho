@@ -5,7 +5,7 @@ class PublicAgencyView:
     def main_menu(self):
         while True:
             try:
-                print("\n===== MENU =====")
+                print("\n===== MENU DA AGENCIA =====")
                 print("1. Sobre")
                 print("2. Listar companias")
                 print("3. Listar notas fiscais")

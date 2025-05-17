@@ -13,13 +13,13 @@ class CommitmentController:
 
 
         # TODO: Temporary data;
-        c1 = Commitment("Compra de materiais", "2023-10-01", 100000.00, self.__index_controller.agency().get_public_agency())
-        c2 = Commitment("Pagamento de serviços", "2023-10-15", 200000.00, self.__index_controller.agency().get_public_agency())
-        c3 = Commitment("Compra de equipamentos", "2023-11-01", 150000.00, self.__index_controller.agency().get_public_agency())
-        c4 = Commitment("Pagamento de fornecedores", "2023-11-15", 500000.00, self.__index_controller.agency().get_public_agency())
+        c1 = Commitment("Compra de materiais", "2023-10-01", 100000.00, self.__index_controller.agency_controller().get_public_agency())
+        c2 = Commitment("Pagamento de serviços", "2023-10-15", 200000.00, self.__index_controller.agency_controller().get_public_agency())
+        c3 = Commitment("Compra de equipamentos", "2023-11-01", 150000.00, self.__index_controller.agency_controller().get_public_agency())
+        c4 = Commitment("Pagamento de fornecedores", "2023-11-15", 500000.00, self.__index_controller.agency_controller().get_public_agency())
         for commitment in [c1, c2, c3, c4]:
             self.__commitments.append(commitment)
-            self.__index_controller.agency().get_public_agency().commitments = commitment
+            self.__index_controller.agency_controller().get_public_agency().commitments = commitment
 
 
 
@@ -57,7 +57,7 @@ class CommitmentController:
         # Get form;
         description, date, amount = self.__commitments_view.form()
         # Set Company;
-        public_agency = self.__index_controller.agency().get_public_agency()
+        public_agency = self.__index_controller.agency_controller().get_public_agency()
         commitment = Commitment(description, date, amount, public_agency)
         self.__commitments.append(commitment)
         public_agency.commitments = commitment

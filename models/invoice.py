@@ -3,7 +3,7 @@ from models.public_agency import PublicAgency
 
 class Invoice:
     _code = 1
-    def __init__(self, type: str, date: str, total_price: float, company: Company, public_agency: PublicAgency):
+    def __init__(self, type: str, date: str, total_price: float, company: Company, public_agency: PublicAgency, retentions: list):
         self.__code = Invoice._code
         Invoice._code += 1  
         self.__type = type
@@ -12,7 +12,7 @@ class Invoice:
         self.__company = company
         self.__public_agency = public_agency
         self.__approved = False
-        self.__taxes = []
+        self.__retentions = retentions
 
     @property
     def code(self):
@@ -43,8 +43,8 @@ class Invoice:
         return self.__approved
     
     @property
-    def taxes(self):
-        return self.__taxes
+    def retentions(self):
+        return self.__retentions
 
     @type.setter
     def type(self, type):
@@ -70,6 +70,6 @@ class Invoice:
     def approved(self, approved):
         self.__approved = approved
 
-    @taxes.setter
-    def taxes(self, tax):
-        self.__taxes.append(tax)
+    @retentions.setter
+    def retentions(self, tax):
+        self.__retentions.append(tax)
