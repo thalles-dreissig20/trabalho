@@ -19,7 +19,7 @@ class CompanyView:
                 print("3. Alterar empresa")
                 print("4. Excluir empresa")
                 print("0 - Retornar")
-                opcao = int(input("Escolha a opcao:"))
+                opcao = int(input("Escolha a opcao: "))
                 
                 if opcao not in [0, 1, 2, 3, 4]:
                     raise MenuOptionError()
@@ -36,22 +36,11 @@ class CompanyView:
         nome = input("Digite a razão social: ")
         return cnpj, nome
 
-    def get_company(self, companies):
-        if not companies:
-            print("Nenhuma empresa cadastrada.")
-            return None
-
-        self.show_companies(companies)
-
+    def get_company(self):
         try:
-            codigo = int(input("Digite o código da empresa: "))
-            for company in companies:
-                if company.code == codigo:
-                    return company
-            print("Código inválido. Nenhuma empresa encontrada com esse código.")
-            return None
+            return int(input("Código da empresa: "))
         except ValueError:
-            print("Entrada inválida. Digite um número inteiro.")
+            print("Entrada inválida. Digite um número válido.")
             return None
 
     def show_companies(self, companies):

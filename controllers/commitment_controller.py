@@ -13,10 +13,10 @@ class CommitmentController:
 
 
         # TODO: Temporary data;
-        c1 = Commitment("Compra de materiais", "2023-10-01", 100000.00, self.__index_controller.agency_controller().get_public_agency())
-        c2 = Commitment("Pagamento de serviços", "2023-10-15", 200000.00, self.__index_controller.agency_controller().get_public_agency())
-        c3 = Commitment("Compra de equipamentos", "2023-11-01", 150000.00, self.__index_controller.agency_controller().get_public_agency())
-        c4 = Commitment("Pagamento de fornecedores", "2023-11-15", 500000.00, self.__index_controller.agency_controller().get_public_agency())
+        c1 = Commitment("Compra de materiais", "01-10-2025", 100000.00, self.__index_controller.agency_controller().get_public_agency())
+        c2 = Commitment("Pagamento de serviços", "02-10-2025", 200000.00, self.__index_controller.agency_controller().get_public_agency())
+        c3 = Commitment("Compra de equipamentos", "03-11-2025", 150000.00, self.__index_controller.agency_controller().get_public_agency())
+        c4 = Commitment("Pagamento de fornecedores", "04-11-2025", 500000.00, self.__index_controller.agency_controller().get_public_agency())
         for commitment in [c1, c2, c3, c4]:
             self.__commitments.append(commitment)
             self.__index_controller.agency_controller().get_public_agency().commitments = commitment
@@ -28,7 +28,7 @@ class CommitmentController:
     def open_screen(self):
         options_list = {
             1: self.register_commitment, 
-            2: self.list_commitment, 
+            2: self.show_commitments, 
             3: self.update_commitment, 
             4: self.delete_commitment, 
             0: self.back
@@ -41,15 +41,41 @@ class CommitmentController:
     # METHODS;
 
     # Obter compromisso;
-    def get_commitment(self, commitment):
-        return self.__commitments[commitment]
+    def get_commitment(self, commitment_codes: list[int] = None):
+        if not self.__commitments:
+            self.__index_controller.get_view().show_message("Não há compromissos cadastrados.")
+            return None
+
+        commitments = self.__commitments
+
+        # Filtrar compromissos por código;
+        if commitment_codes:
+            commitments = [c for c in self.__commitments if c.code in commitment_codes]
+
+        if not commitments:
+            self.__index_controller.get_view().show_message("Nenhum compromisso encontrado com os códigos fornecidos.")
+            return None
+        else:
+            return commitments
+        
     
     # Listar compromissos;
-    def list_commitment(self):
-        if len(self.__commitments) == 0:
+    def show_commitments(self, commitment_codes: list[int] = None):
+        if not self.__commitments:
             self.__index_controller.get_view().show_message("Não há compromissos cadastrados.")
+            return
+
+        commitments = self.__commitments
+
+        # Filtrar compromissos por código;
+        if commitment_codes:
+            commitments = [c for c in self.__commitments if c.code in commitment_codes]
+
+        if not commitments:
+            self.__index_controller.get_view().show_message("Nenhum compromisso encontrado com os códigos fornecidos.")
+            return None
         else:
-            self.__commitments_view.show_commitments(self.__commitments)
+            return self.__commitments_view.show_commitments(commitments)
 
 
     # Registrar um compromisso;
@@ -67,24 +93,39 @@ class CommitmentController:
 
     # Atualizar um compromisso;
     def update_commitment(self):
-        index = self.__commitments_view.get_commitment(self.__commitments)
+        self.show_commitments()
+        index = self.__commitments_view.get_commitment()
         if index is not None:
+            commitment = next((i for i in self.__commitments if i.code == index), None)
+            if commitment is None:
+                self.__index_controller.get_view().show_message("Compromisso não encontrado.")
+                return
+            
+            # Get form;
             description, date, amount = self.__commitments_view.form()
-            self.__commitments[index].description = description
-            self.__commitments[index].date = date
-            self.__commitments[index].amount = amount
+            commitment.description = description
+            commitment.date = date
+            commitment.amount = amount
+
             self.__index_controller.get_view().show_message("Compromisso atualizado com sucesso.")
+        else:
+            self.__index_controller.get_view().show_message("Nenhum compromisso encontrado.")
 
     
     # Excluir um compromisso;
     def delete_commitment(self):
-        if len(self.__commitments) == 0:
-            self.__index_controller.get_view().show_message("Não há compromissos cadastrados.")
+        self.show_commitments()
+        index = self.__commitments_view.get_commitment()
+        if index is not None:
+            commitment = next((i for i in self.__commitments if i.code == index), None)
+            if commitment is None:
+                self.__index_controller.get_view().show_message("Compromisso não encontrado.")
+                return
+            
+            self.__commitments.remove(commitment)
+            self.__index_controller.get_view().show_message("Compromisso excluído com sucesso.")
         else:
-            index = self.__commitments_view.get_commitment(self.__commitments)
-            if index is not None:
-                del self.__commitments[index]
-                self.__index_controller.get_view().show_message("Compromisso excluído com sucesso.")
+            self.__index_controller.get_view().show_message("Nenhum compromisso encontrado.")
 
 
     # Voltar;

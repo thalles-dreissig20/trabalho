@@ -32,6 +32,7 @@ class PublicAgencyController:
     ################################################################################
     # METHODS;
 
+    # Obter agencia;
     def get_public_agency(self):
         return self.__public_agency
     
@@ -41,14 +42,15 @@ class PublicAgencyController:
     
     # Listar companias;
     def list_companies(self):
-        return self.__public_agency_view.show_companies(self.__public_agency)
+        return self.__index_controller.company_controller().show_companies(agency=self.__public_agency.code)
     
     # Listar notas;
     def list_invoices(self):
-        return self.__public_agency_view.show_invoices(self.__public_agency)
+        return self.__index_controller.invoices_controller().show_invoices(self.__public_agency.code)
     
+    # Relatório;
     def report(self):
-        return self.__public_agency_view.report(self.__public_agency)
+        return self.__index_controller.report_controller().open_screen()
 
     # Voltar;
     def back(self):

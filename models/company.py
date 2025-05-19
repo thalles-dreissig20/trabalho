@@ -31,7 +31,7 @@ class Company:
         return self.__public_agency
     
     @property
-    def invoice(self):
+    def invoices(self):
         return self.__invoices
 
     @cnpj.setter
@@ -47,6 +47,6 @@ class Company:
         if (isinstance(public_agency, PublicAgency)):
             self.__public_agency = public_agency
 
-    @invoice.setter
-    def invoice(self, invoice):
+    @invoices.setter
+    def invoices(self, invoice):
         self.__invoices.append(invoice)

@@ -1,12 +1,8 @@
 class PublicAgency:
-    def __init__(
-        self,
-        cnpj: str,
-        social_reason: str,
-        amount: float,
-        email: str = "",
-        phone: str = ""
-    ):
+    _code = 1
+    def __init__(self, cnpj: str, social_reason: str, amount: float, email: str = "", phone: str = ""):
+        self.__code = PublicAgency._code
+        PublicAgency._code += 1  
         self.__cnpj = cnpj
         self.__social_reason = social_reason
         self.__amount = amount 
@@ -18,6 +14,10 @@ class PublicAgency:
         
     ################################################################################
     # METHODS;
+
+    @property
+    def code(self):
+        return self.__code
 
     @property
     def cnpj(self):

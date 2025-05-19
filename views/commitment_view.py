@@ -1,4 +1,5 @@
-
+# Helpers;
+from helpers.index import validate_data
 
 class CommitmentView:
     def main_menu(self):
@@ -7,29 +8,29 @@ class CommitmentView:
         print("2. Listar compromissos")
         print("3. Alterar compromisso")
         print("4. Excluir compromisso")
-        print("0 - Retornar")
-        opcao = int(input("Escolha a opcao:"))
+        print("0. Retornar")
+        opcao = int(input("Escolha a opcao: "))
         return opcao
     
 
     def form(self):
         description = input("Descrição do compromisso: ")
-        date = input("Data do compromisso (DD/MM/AAAA): ")
+        while True:
+            data_str = input("Data do compromisso (DD/MM/AAAA): ")
+            date = validate_data(data_str)
+            if date:
+                break
         amount = float(input("Valor do compromisso: "))
         return description, date, amount
 
     
-    def get_commitment(self, commitments):
-        if not commitments:
-            print("Nenhum compromisso cadastrado.")
+    def get_commitment(self):
+        try:
+            return int(input("Código do compromisso: "))
+        except ValueError:
+            print("Entrada inválida. Digite um número válido.")
             return None
-        self.show_commitments(commitments)
-        index = int(input("Escolha o número do compromisso: "))
-        if 0 <= index < len(commitments):
-            return index
-        else:
-            print("Índice inválido.")
-            return None
+
 
     def show_commitments(self, commitments):
         print("\n--- COMPROMISSOS ---")

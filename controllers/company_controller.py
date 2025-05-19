@@ -23,7 +23,7 @@ class CompanyController:
     def open_screen(self):
         options_list = {
             1: self.register_company, 
-            2: self.list_companies, 
+            2: self.show_companies, 
             3: self.update_company, 
             4: self.delete_company, 
             0: self.back
@@ -36,16 +36,51 @@ class CompanyController:
     # METHODS;
 
     # Obter compania;
-    def get_company(self, company):
-        return self.__companies[company]
-    
-    # Listar companias;
-    def list_companies(self):
-        if len(self.__companies) == 0:
+    def get_company(self, agency: int = None, company: int = None):
+        if not self.__companies:
             self.__index_controller.get_view().show_message("Não há empresas cadastradas.")
+            return None
+
+        companies = self.__companies
+        # Filtrar pela agencia?
+        if agency:
+            agency = self.__index_controller.agency_controller().get_public_agency()
+            companies = [c for c in self.__companies if c.public_agency.code == agency]
+
+        # Filtrar pela empresa?
+        if company:
+            companies = next((c for c in self.__companies if c.code == company), None)
+
+        if not companies:
+            self.__index_controller.get_view().show_message("Nenhuma empresa encontrada com os critérios fornecidos.")
+            return None
         else:
-            self.__company_view.show_companies(self.__companies)
-    
+            return companies
+
+        
+    # Obter lista de companias;
+    def show_companies(self, agency: int = None, companies_codes: list[int] = None):
+        if not self.__companies:
+            self.__index_controller.get_view().show_message("Não há empresas cadastradas.")
+            return
+
+        companies = self.__companies
+        # Filtrar pela agencia?
+        if agency:
+            agency = self.__index_controller.agency_controller().get_public_agency()
+            companies = [c for c in self.__companies if c.public_agency.code == agency]
+
+        # Filtrar pela empresa?
+        if companies_codes:
+            companies = [c for c in self.__companies if c.code in companies_codes]
+
+        if not companies:
+            self.__index_controller.get_view().show_message("Nenhuma empresa encontrada com os critérios fornecidos.")
+            return
+        else:
+            return self.__company_view.show_companies(companies)
+
+
     # Registrar uma compania;
     def register_company(self):
         # Get form;
@@ -58,27 +93,50 @@ class CompanyController:
         
         self.__index_controller.get_view().show_message("Empresa cadastrada com sucesso.")
 
+
     # Atualizar uma compania;
     def update_company(self):
-        index = self.__company_view.get_company(self.__companies)
-        if index is not None:
-            cnpj, social_reason = self.__company_view.form()
-            self.__companies[index].cnpj = cnpj
-            self.__companies[index].social_reason = social_reason
-            self.__index_controller.get_view().show_message("Empresa atualizada.")
+        self.show_companies()
+        if len(self.__companies) == 0:
+            self.__index_controller.get_view().show_message("Não há empresas cadastradas.")
+            return
+        
+        # Get company;
+        code = self.__company_view.get_company()
+        company = next((c for c in self.__companies if c.code == code), None)
+        if company is None:
+            self.__index_controller.get_view().show_message("Empresa não encontrada.")
+            return
+        
+        # Get form;
+        cnpj, social_reason = self.__company_view.form()
+        
+        company.cnpj = cnpj
+        company.social_reason = social_reason
+        self.__index_controller.get_view().show_message("Empresa atualizada.")
+
 
     # Deletar uma compania;
     def delete_company(self):
+        self.show_companies()
         if len(self.__companies) == 0:
             self.__index_controller.get_view().show_message("Não há empresas cadastradas.")
-        else:
-            index = self.__company_view.get_company(self.__companies)
-            if index is not None:
-                company = self.__companies[index]
-                public_agency = self.__index_controller.agency_controller().get_public_agency()
+            return
+        
+        # Get company;
+        code = self.__company_view.get_company()
+        company = next((c for c in self.__companies if c.code == code), None)
+        if company is None:
+            self.__index_controller.get_view().show_message("Empresa não encontrada.")
+            return
+        
+        # Deletar empresa;
+        self.__companies.remove(company)
+        self.__index_controller.get_view().show_message("Empresa excluída com sucesso.")
 
-                public_agency.companies.remove(company)
-                self.__companies.remove(company)
+
+    def view(self):
+        return self.__company_view
 
     # Voltar;
     def back(self):

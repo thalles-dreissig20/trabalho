@@ -9,7 +9,7 @@ class RetentionView:
                 print("1. Listar retenções")
                 print("2. Atualizar retenções")
                 print("0 - Retornar")
-                opcao = int(input("Escolha a opcao:"))
+                opcao = int(input("Escolha a opcao: "))
                 
                 if opcao not in [0, 1, 2]:
                     raise MenuOptionError()
@@ -21,15 +21,9 @@ class RetentionView:
                 print(e)
     
 
-    def get_retention(self, retentions):
-        self.show_retentions(retentions)
+    def get_retention(self): 
         try:
-            code = int(input("Digite o código da retenção: "))
-            for i, retention in enumerate(retentions):
-                if retention.code == code:
-                    return retention
-            print("Código inválido.")
-            return None 
+            return int(input("Digite o código da retenção: "))
         except ValueError:
             print("Entrada inválida. Digite um número válido.")
             return None

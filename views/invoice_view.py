@@ -1,3 +1,5 @@
+# Helpers;
+from helpers.index import validate_data
 # Exceptions;
 from exceptions.index import MenuOptionError
 
@@ -24,7 +26,7 @@ class InvoiceView:
                 print("4. Aprovar nota")
                 print("5. Excluir nota")
                 print("0 - Retornar")
-                opcao = int(input("Escolha a opcao:"))
+                opcao = int(input("Escolha a opcao: "))
                 
                 if opcao not in [0, 1, 2, 3, 4, 5]:
                     raise MenuOptionError()
@@ -38,7 +40,11 @@ class InvoiceView:
 
     def form(self):
         tipo = input("Tipo (NF/Fatura): ")
-        data = input("Data (YYYY-MM-DD): ")
+        while True:
+            data_str = input("Data (DD-MM-YYYY): ")
+            data = validate_data(data_str)
+            if data:
+                break
         valor_total = float(input("Valor total: "))
         tax = input("Aplicar imposto? (S/N): ").strip().upper()
         return tipo, data, valor_total, tax
@@ -69,24 +75,12 @@ class InvoiceView:
                     print("Opção inválida.")
 
 
-    def get_invoice(self, invoices):
-        if not invoices:
-            print("Nenhuma nota cadastrada.")
-            return None
-        
-        self.show_invoices(invoices)
-        
+    def get_invoice(self):
         try:
-            codigo = int(input("Digite o código da nota: "))
-            for invoice in invoices:
-                if invoice.code == codigo:
-                    return invoice
-            print("Código inválido. Nenhuma nota encontrada com esse código.")
-            return None
-        
+            return int(input("Código da nota: "))
         except ValueError:
-            print("Entrada inválida.")
-        return None
+            print("Entrada inválida. Digite um número válido.")
+            return None
 
 
     def show_invoices(self, invoices):
