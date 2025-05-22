@@ -1,6 +1,6 @@
 # Sistema de Controle de Retenção de Tributos - Órgão Público
 
-Este sistema, desenvolvido em Python com base no paradigma de programação orientada a objetos, tem como objetivo organizar e controlar os dados de pagamento de tributos (taxas, contribuições, impostos) que devem ser deduzidos durante o processo de pagamento de despesas de um órgão público, permitindo o controle **off-line** antes do lançamento no sistema da Receita Federal (SIAFI).
+Este sistema, desenvolvido em Python com base no paradigma de programação orientada a objetos, tem como objetivo organizar e controlar os dados de pagamento de tributos (taxas, contribuições, impostos) que devem ser deduzidos durante o processo de pagamento de despesas de um órgão público, permitindo o controle **off-line** antes do lançamento no sistema da Receita Federal (e-CAC).
 
 
 ## Estrutura do Sistema
