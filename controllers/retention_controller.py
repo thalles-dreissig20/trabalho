@@ -34,8 +34,8 @@ class RetentionController:
 
     def get_retention(self, retention: int = None):
         if not self.__retentions:
-            self.__index_controller.get_view().show_message("Não há retenções cadastradas.")
-            return None
+            self.__index_controller.get_view().show_message("❕- Não há retenções cadastradas.")
+            return []
 
         retentions = self.__retentions
 
@@ -43,15 +43,15 @@ class RetentionController:
             retentions = next((r for r in self.__retentions if r.code == retention), None)
 
         if not retentions:
-            self.__index_controller.get_view().show_message("Nenhuma retenção encontrada com os códigos fornecidos.")
-            return None
+            self.__index_controller.get_view().show_message("❕- Nenhuma retenção encontrada com os códigos fornecidos.")
+            return []
         else:
             return retentions
         
 
     def show_retentions(self, retentions_codes: list[int] = None):
         if not self.__retentions:
-            self.__index_controller.get_view().show_message("Não há retenções cadastradas.")
+            self.__index_controller.get_view().show_message("❕- Não há retenções cadastradas.")
             return
 
         retentions = self.__retentions
@@ -60,7 +60,7 @@ class RetentionController:
             retentions = [r for r in self.__retentions if r.code in retentions_codes]
 
         if not retentions:
-            self.__index_controller.get_view().show_message("Nenhuma retenção encontrada com os códigos fornecidos.")
+            self.__index_controller.get_view().show_message("❕- Nenhuma retenção encontrada com os códigos fornecidos.")
             return
         else:
             self.__retention_view.show_retentions(retentions)
@@ -71,13 +71,13 @@ class RetentionController:
         self.show_retentions()
         code = self.__retention_view.get_retention()
         if code is None:
-            self.__index_controller.get_view().show_message("Retenção não encontrada.")
+            self.__index_controller.get_view().show_message("❕- Retenção não encontrada.")
             return
         
         retention = next((i for i in self.__retentions if i.code == code), None)
         active = self.__retention_view.form()
         retention.active = active
-        self.__index_controller.get_view().show_message("Retenção atualizada com sucesso.")
+        self.__index_controller.get_view().show_message("✨ - Retenção atualizada com sucesso.")
 
 
     def view(self):

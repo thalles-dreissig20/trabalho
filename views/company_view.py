@@ -1,15 +1,8 @@
 # Exceptions;
 from exceptions.index import MenuOptionError
+from tabulate import tabulate
 
-class CompanyView:
-    def __str__(self):
-        return (
-            f"╔══════════════════════════════════════════╗\n"
-            f"║ Empresa: {self.__social_reason}\n"
-            f"║ CNPJ:    {self.__cnpj}\n"
-            f"╚══════════════════════════════════════════╝"
-        )
-    
+class CompanyView: 
     def main_menu(self):
         while True:
             try:
@@ -19,7 +12,7 @@ class CompanyView:
                 print("3. Alterar empresa")
                 print("4. Excluir empresa")
                 print("0 - Retornar")
-                opcao = int(input("Escolha a opcao: "))
+                opcao = int(input("Escolha a opção: "))
                 
                 if opcao not in [0, 1, 2, 3, 4]:
                     raise MenuOptionError()
@@ -44,14 +37,14 @@ class CompanyView:
             return None
 
     def show_companies(self, companies):
-        print("\n--- EMPRESAS ---")
-        for i, company in enumerate(companies):
-            print(
-                f"╔══════════════════════════════════════════════════════════╗\n"
-                f"║ Código:       {company.code}\n"
-                f"║ Razão Social: {company.social_reason}\n"
-                f"║ CNPJ:         {company.cnpj}\n"
-                f"║ ----------------------------------------------------------\n"
-                f"║ Agencia pública Associada:   {company.public_agency.social_reason}\n"
-                f"╚══════════════════════════════════════════════════════════╝\n"
-            )
+        if not companies:
+            print("Nenhuma empresa cadastrada.")
+            return
+        print('\n\n')
+        headers = ["Código", "Razão Social", "CNPJ", "Agência Pública Associada"]
+        table_data = [
+            [company.code, company.social_reason, company.cnpj, company.public_agency.social_reason]
+            for company in companies
+        ]
+
+        print(tabulate(table_data, headers=headers, tablefmt="fancy_grid", stralign="left"))

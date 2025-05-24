@@ -1,5 +1,6 @@
 # Exceptions;
 from exceptions.index import MenuOptionError
+from tabulate import tabulate
 
 class RetentionView:
     def main_menu(self):
@@ -7,9 +8,9 @@ class RetentionView:
             try:
                 print("\n===== MENU RETENÇAO =====")
                 print("1. Listar retenções")
-                print("2. Atualizar retenções")
-                print("0 - Retornar")
-                opcao = int(input("Escolha a opcao: "))
+                print("2. Atualizar retenções ")
+                print("0. Retornar")
+                opcao = int(input("Escolha a opção: "))
                 
                 if opcao not in [0, 1, 2]:
                     raise MenuOptionError()
@@ -35,15 +36,20 @@ class RetentionView:
     
 
     def show_retentions(self, retentions):
-        print("\n--- RETENÇÕES ---\n")
+        if not retentions:
+            print("Nenhuma retenção cadastrada.")
+            return
+        print('\n\n')
+        headers = ["Código", "Nome", "Percentual (%)", "Ativo"]
+        table_data = []
+
         for retention in retentions:
-            print(
-                f"╔═════════════════════════╗\n"
-                f"║ Código:       {retention.code}\n"
-                f"║ Nome:         {retention.name}\n"
-                f"║ Percentual:   {retention.rate:.2f}%\n"
-                f"║ Base Cálculo: R$ {retention.base_amount:,.2f}\n"
-                f"║ Ativo:        {'Sim' if retention.active else 'Não'}\n"
-                f"╚═════════════════════════╝\n"
-            )
-        
+            table_data.append([
+                retention.code,
+                retention.name,
+                f"{retention.rate:.2f}%",
+                "Sim" if retention.active else "Não"
+            ])
+
+        print(tabulate(table_data, headers=headers, tablefmt="fancy_grid", stralign="left", numalign="right"))
+        print()

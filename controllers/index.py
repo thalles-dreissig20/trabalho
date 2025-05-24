@@ -68,6 +68,9 @@ class IndexController:
     def retention_controller(self):
         return self.__retention_controller
     
+    def commitment_controller(self):
+        return self.__commitment_controller
+    
     def report_controller(self):
         return self.__report_controller
     

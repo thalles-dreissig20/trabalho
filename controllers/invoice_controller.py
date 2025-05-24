@@ -1,6 +1,7 @@
 # Views;
 from views.invoice_view import InvoiceView
 from views.company_view import CompanyView
+from datetime import datetime
 
 # Models;
 from models.invoice import Invoice
@@ -10,6 +11,16 @@ class InvoiceController:
         self.__invoices = []
         self.__index_controller = index_controller
         self.__invoice_view = InvoiceView()
+
+        # TODO: Temporary data;
+        i1 = Invoice("NF", datetime.strptime("21-10-2025", "%d-%m-%Y").date(), 1000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(2), self.__index_controller.retention_controller().get_retention(1)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
+        i2 = Invoice("NF", datetime.strptime("22-10-2025", "%d-%m-%Y").date(), 2000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(5)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
+        i3 = Invoice("Fatura", datetime.strptime("23-11-2025", "%d-%m-%Y").date(), 3000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(1)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
+        i4 = Invoice("Fatura", datetime.strptime("24-11-2025", "%d-%m-%Y").date(), 4000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(6)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
+        for i in [i1, i2, i3, i4]:
+            self.__invoices.append(i)
+            self.__index_controller.agency_controller().get_public_agency().invoices.append(i)
+            self.__index_controller.company_controller().get_company(1, 1).invoices.append(i)
 
 
     ################################################################################
@@ -31,27 +42,31 @@ class InvoiceController:
 
     
     # Listar invoices;
-    def get_invoices(self, agency: int = None, company: int = None, code: int = None):
+    def get_invoices(self, agency: int = None, company: int = None, commitment: int = None, code: int = None):
         if not self.__invoices:
-            self.__index_controller.get_view().show_message("Não há notas cadastradas.")
+            self.__index_controller.get_view().show_message("❕- Não há notas cadastradas.")
             return []
 
         invoices = self.__invoices
         # Filtrar pela agencia?
         if agency:
             agency = self.__index_controller.agency_controller().get_public_agency()
-            self.__invoices = [i for i in invoices if i.public_agency.code == agency]
+            invoices = [i for i in self.__invoices if i.public_agency.code == agency]
         
         # Filtrar pela empresa?
         if company:
-            self.__invoices = [i for i in invoices if i.company.code == company]
+            invoices = [i for i in self.__invoices if i.company.code == company]
+
+        # Filtrar pelo compromisso?
+        if commitment:
+            invoices = [i for i in self.__invoices if i.commitment.code == commitment]
 
         # Filtrar pelos notas?
         if code:
-            self.__invoices = next((i for i in invoices if i.code == code), None)
+            invoices = next((i for i in self.__invoices if i.code == code), None)
 
         if not invoices:
-            self.__index_controller.get_view().show_message("Nenhuma nota encontrada com os códigos fornecidos.")
+            self.__index_controller.get_view().show_message("❕- Nenhuma nota encontrada com os códigos fornecidos.")
             return []
         else:
             return invoices
@@ -60,54 +75,67 @@ class InvoiceController:
     # Show invoices;
     def show_invoices(self, agency: int = None, company: int = None, code: int = None):
         if not self.__invoices:
-            self.__index_controller.get_view().show_message("Não há notas cadastradas.")
-            return
+            self.__index_controller.get_view().show_message("❕- Não há notas cadastradas.")
+            return []
 
         invoices = self.__invoices
         # Filtrar pela agencia?
         if agency:
             agency = self.__index_controller.agency_controller().get_public_agency()
-            self.__invoices = [i for i in invoices if i.public_agency.code == agency]
+            invoices = [i for i in self.__invoices if i.public_agency.code == agency.code]
 
         # Filtrar pela empresa?
         if company:
-            self.__invoices = [i for i in invoices if i.company.code == company]
+            invoices = [i for i in self.__invoices if i.company.code == company]
         
         # Filtrar pelos notas?
         if code:
-            self.__invoices = next((i for i in invoices if i.code == code), None)
+            invoices = next((i for i in self.__invoices if i.code == code), None)
         
         if not invoices:
-            self.__index_controller.get_view().show_message("Nenhuma nota encontrada com os códigos fornecidos.")
-            return
+            self.__index_controller.get_view().show_message("❕- Nenhuma nota encontrada com os códigos fornecidos.")
+            return []
         else:            
             return self.__invoice_view.show_invoices(invoices)
 
 
     # Registrar uma invoice;
     def register_invoice(self):
-        # Pegar entidade;
+        # Pegar agencia;
         public_agency = self.__index_controller.agency_controller().get_public_agency()
-        
+
         if not public_agency.companies:
-            self.__index_controller.get_view().show_message("Nenhuma empresa cadastrada. Cadastre uma empresa antes.")
+            self.__index_controller.get_view().show_message("❕- Nenhuma empresa cadastrada. Cadastre uma empresa antes.")
             return
 
+        self.__index_controller.commitment_controller().show_commitments()
+        commitment_code = self.__index_controller.commitment_controller().view().get_commitment()
+        if commitment_code is None:
+            return
+        
+        commitment = self.__index_controller.commitment_controller().get_commitment(commitment=commitment_code)
+        
         # Pegar empresa;
         self.__index_controller.company_controller().show_companies()
-        company_code = self.__index_controller.company_controller().view().get_company()
+
+        while True:
+            company_code = self.__index_controller.company_controller().view().get_company()
+            if company_code != commitment.company.code:
+                self.__index_controller.get_view().show_message("❕- A empresa informada não corresponde ao compromisso selecionado. Tente novamente.")
+                continue
+            break
 
         if company_code is None:
-            self.__index_controller.get_view().show_message("Código inválido.")
+            self.__index_controller.get_view().show_message("❕- Código inválido.")
             return
 
         company = self.__index_controller.company_controller().get_company(agency=public_agency.code, company=company_code)
         if company is None:
-            self.__index_controller.get_view().show_message("Código inválido.")
+            self.__index_controller.get_view().show_message("❕- Código inválido.")
             return    
     
         # Coletar dados;
-        type, date, total_price, tax = self.__invoice_view.form()
+        type, date, total_price, tax = self.__invoice_view.form(commitment.amount)
 
         # Taxas;
         retentions = []
@@ -123,16 +151,16 @@ class InvoiceController:
                 if continue_adding == "N":
                     break
                 elif continue_adding != "S":
-                    self.__index_controller.get_view().show_message("Opção inválida. Tente novamente.")
+                    self.__index_controller.get_view().show_message("❕- Opção inválida. Tente novamente.")
 
 
         # Registrar nota;
-        invoice = Invoice(type, date, total_price, company, public_agency, retentions)
+        invoice = Invoice(type, date, total_price, company, public_agency, retentions, commitment)
         self.__invoices.append(invoice)
         public_agency.invoices.append(invoice)
         company.invoices.append(invoice)
 
-        self.__index_controller.get_view().show_message("Nota fiscal cadastrada com sucesso.")
+        self.__index_controller.get_view().show_message("✨ - Nota fiscal cadastrada com sucesso.")
 
 
     # Atualizar uma invoice;
@@ -142,63 +170,70 @@ class InvoiceController:
         invoice = next((i for i in self.__invoices if i.code == invoice_code), None)
 
         if invoice is None:
-            self.__index_controller.get_view().show_message("Nota não encontrada.")
+            self.__index_controller.get_view().show_message("❕- Nota não encontrada.")
             return
         
         if invoice.approved:
-            self.__index_controller.get_view().show_message("Não é possível atualizar uma nota já aprovada.")
+            self.__index_controller.get_view().show_message("❕- Não é possível atualizar uma nota já aprovada.")
             return
         
         self.__invoice_view.update_invoice_fields(invoice)
 
-        self.__index_controller.get_view().show_message("Nota fiscal atualizada com sucesso.")
+        self.__index_controller.get_view().show_message("✨ - Nota fiscal atualizada com sucesso.")
 
 
     # Aprovar uma invoice;
     def approve(self):
         if not self.__invoices:
-            self.__index_controller.get_view().show_message("Nenhuma nota cadastrada para aprovar.")
+            self.__index_controller.get_view().show_message("❕- Nenhuma nota cadastrada para aprovar.")
             return
 
         pending_invoices = [inv for inv in self.__invoices if not inv.approved]
 
         if not pending_invoices:
-            self.__index_controller.get_view().show_message("Todas as notas já foram aprovadas.")
+            self.__index_controller.get_view().show_message("✨ - Todas as notas já foram aprovadas.")
             return
 
         self.__invoice_view.show_invoices(pending_invoices)
 
         try:
-            index = int(input("Escolha o número da nota para aprovar: "))
-            invoice_to_approve = pending_invoices[index]
+            invoice_code = self.__invoice_view.get_invoice()
+            invoice_to_approve = next((i for i in pending_invoices if i.code == invoice_code), None)
+            if invoice_to_approve is None:
+                self.__index_controller.get_view().show_message("❕- Nota não encontrada.")
+                return
+
         except (ValueError, IndexError):
-            self.__index_controller.get_view().show_message("Nota inválida.")
+            self.__index_controller.get_view().show_message("❕- Nota inválida.")
             return
 
         invoice_to_approve.approved = True
-        self.__index_controller.get_view().show_message(f"Nota {invoice_to_approve.code} aprovada com sucesso.")
+        invoice_to_approve.commitment.amount -= invoice_to_approve.total_price
+
+        self.__index_controller.get_view().show_message(f"✨ - Nota {invoice_to_approve.code} aprovada com sucesso.")
+
 
 
     # Deletar uma invoice;
     def delete_invoice(self):
         self.show_invoices()
         if not self.__invoices:
-            self.__index_controller.get_view().show_message("Nenhuma nota cadastrada.")
+            self.__index_controller.get_view().show_message("❕- Nenhuma nota cadastrada.")
             return
 
         invoice_code = self.__invoice_view.get_invoice()
         invoice = next((i for i in self.__invoices if i.code == invoice_code), None)
 
         if invoice is None:
-            self.__index_controller.get_view().show_message("Nota não encontrada.")
+            self.__index_controller.get_view().show_message("❕- Nota não encontrada.")
             return
 
         if invoice.approved:
-            self.__index_controller.get_view().show_message("Não é possível excluir uma nota já aprovada.")
+            self.__index_controller.get_view().show_message("❕- Não é possível excluir uma nota já aprovada.")
             return
 
         self.__invoices.remove(invoice)
-        self.__index_controller.get_view().show_message("Nota fiscal excluída com sucesso.")
+        self.__index_controller.get_view().show_message("✨ - Nota fiscal excluída com sucesso.")
         
 
     # Voltar;

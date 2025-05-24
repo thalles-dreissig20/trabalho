@@ -13,10 +13,8 @@ class ReportController:
     def open_screen(self):
         options_list = {
             1: self.general_report, 
-            2: self.per_company_report, 
-            3: self.per_invoice_report,
-            4: self.per_commitment_report,
-            5: self.per_date_report, 
+            2: self.per_commitment_report,
+            3: self.per_date_report, 
             0: self.back
         }
         while True:
@@ -27,33 +25,34 @@ class ReportController:
 
     def general_report(self):
         agency = self.__index_controller.agency_controller().get_public_agency()
-        return self.__report_view.general_report(agency)
+        retentions = self.__index_controller.retention_controller().get_retention()
+        return self.__report_view.general_report(agency, retentions)
     
-    def per_company_report(self):
-        agency = self.__index_controller.agency_controller().get_public_agency()
-        if not agency.companies:
-            print("Nenhuma companhia cadastrada.")
+
+    def per_commitment_report(self):
+        self.__index_controller.commitment_controller().show_commitments()
+        commitment_code = self.__index_controller.commitment_controller().view().get_commitment()
+        if not commitment_code:
+            print("❕- Nenhum compromisso encontrado.")
             return
         
-        company = self.__index_controller.company_controller().get_company(agency_code=agency.code)
-        print(company.code)
-        invoices = self.__index_controller.invoices_controller().get_invoices(company=company.code)
-        return self.__report_view.per_company_report(company, invoices)
-    
-    
-    def per_invoice_report(self):
-        return self.__report_view.per_invoice_report()
-    
-    def per_commitment_report(self):
-        return self.__report_view.per_commitment_report()
-    
+        commitments = self.__index_controller.commitment_controller().get_commitment(commitment=commitment_code)
+        invoices = self.__index_controller.invoices_controller().get_invoices(commitment=commitment_code)
+        if not invoices:
+            return
+
+        retentions = self.__index_controller.retention_controller().get_retention()
+        return self.__report_view.per_commitment_report(commitments, invoices, retentions)
+
+
     def per_date_report(self):
         agency = self.__index_controller.agency_controller().get_public_agency()
         if not agency.invoices:
-            print("Nenhuma nota cadastrada.")
+            print("❕- Nenhuma nota cadastrada.")
             return
         invoices = self.__index_controller.invoices_controller().get_invoices()
-        return self.__report_view.per_date_report(invoices)
+        retentions = self.__index_controller.retention_controller().get_retention()
+        return self.__report_view.per_date_report(invoices, retentions)
 
     
     # Voltar;

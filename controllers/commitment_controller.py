@@ -13,10 +13,10 @@ class CommitmentController:
 
 
         # TODO: Temporary data;
-        c1 = Commitment("Compra de materiais", "01-10-2025", 100000.00, self.__index_controller.agency_controller().get_public_agency())
-        c2 = Commitment("Pagamento de serviços", "02-10-2025", 200000.00, self.__index_controller.agency_controller().get_public_agency())
-        c3 = Commitment("Compra de equipamentos", "03-11-2025", 150000.00, self.__index_controller.agency_controller().get_public_agency())
-        c4 = Commitment("Pagamento de fornecedores", "04-11-2025", 500000.00, self.__index_controller.agency_controller().get_public_agency())
+        c1 = Commitment("Compra de materiais", "01-10-2025", 100000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=1))
+        c2 = Commitment("Pagamento de serviços", "02-10-2025", 200000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=2))
+        c3 = Commitment("Compra de equipamentos", "03-11-2025", 150000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=3))
+        c4 = Commitment("Pagamento de fornecedores", "04-11-2025", 500000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=4))
         for commitment in [c1, c2, c3, c4]:
             self.__commitments.append(commitment)
             self.__index_controller.agency_controller().get_public_agency().commitments = commitment
@@ -41,19 +41,19 @@ class CommitmentController:
     # METHODS;
 
     # Obter compromisso;
-    def get_commitment(self, commitment_codes: list[int] = None):
+    def get_commitment(self, commitment: int = None):
         if not self.__commitments:
-            self.__index_controller.get_view().show_message("Não há compromissos cadastrados.")
+            self.__index_controller.get_view().show_message("❕- Não há compromissos cadastrados.")
             return None
 
         commitments = self.__commitments
 
         # Filtrar compromissos por código;
-        if commitment_codes:
-            commitments = [c for c in self.__commitments if c.code in commitment_codes]
+        if commitment:
+            commitments = next((i for i in commitments if i.code == commitment), None)
 
         if not commitments:
-            self.__index_controller.get_view().show_message("Nenhum compromisso encontrado com os códigos fornecidos.")
+            self.__index_controller.get_view().show_message("❕- Nenhum compromisso encontrado com os códigos fornecidos.")
             return None
         else:
             return commitments
@@ -62,7 +62,7 @@ class CommitmentController:
     # Listar compromissos;
     def show_commitments(self, commitment_codes: list[int] = None):
         if not self.__commitments:
-            self.__index_controller.get_view().show_message("Não há compromissos cadastrados.")
+            self.__index_controller.get_view().show_message("❕- Não há compromissos cadastrados.")
             return
 
         commitments = self.__commitments
@@ -72,7 +72,7 @@ class CommitmentController:
             commitments = [c for c in self.__commitments if c.code in commitment_codes]
 
         if not commitments:
-            self.__index_controller.get_view().show_message("Nenhum compromisso encontrado com os códigos fornecidos.")
+            self.__index_controller.get_view().show_message("❕- Nenhum compromisso encontrado com os códigos fornecidos.")
             return None
         else:
             return self.__commitments_view.show_commitments(commitments)
@@ -82,35 +82,67 @@ class CommitmentController:
     def register_commitment(self):
         # Get form;
         description, date, amount = self.__commitments_view.form()
-        # Set Company;
+
+        # Get public agency;
         public_agency = self.__index_controller.agency_controller().get_public_agency()
-        commitment = Commitment(description, date, amount, public_agency)
+
+        # Get company;
+        self.__index_controller.company_controller().show_companies(agency=public_agency.code)
+        company_code = self.__index_controller.company_controller().view().get_company()
+        if company_code is None:
+            self.__index_controller.get_view().show_message("❕- Nenhuma empresa encontrada.")
+            return
+        company = next((i for i in self.__index_controller.company_controller().get_company() if i.code == company_code), None)
+
+        # Register commitment;
+        commitment = Commitment(description, date, amount, public_agency, company)
         self.__commitments.append(commitment)
         public_agency.commitments = commitment
         
-        self.__index_controller.get_view().show_message("Compromisso cadastrado com sucesso.")
+        self.__index_controller.get_view().show_message("✨ - Compromisso cadastrado com sucesso.")
 
 
     # Atualizar um compromisso;
     def update_commitment(self):
         self.show_commitments()
         index = self.__commitments_view.get_commitment()
+
         if index is not None:
             commitment = next((i for i in self.__commitments if i.code == index), None)
             if commitment is None:
-                self.__index_controller.get_view().show_message("Compromisso não encontrado.")
+                self.__index_controller.get_view().show_message("❕- Compromisso não encontrado.")
                 return
-            
-            # Get form;
+
+            # Atualizar os dados do compromisso
             description, date, amount = self.__commitments_view.form()
             commitment.description = description
             commitment.date = date
             commitment.amount = amount
 
-            self.__index_controller.get_view().show_message("Compromisso atualizado com sucesso.")
-        else:
-            self.__index_controller.get_view().show_message("Nenhum compromisso encontrado.")
+            # Atualizar empresa associada automaticamente
+            public_agency = commitment.public_agency
+            self.__index_controller.company_controller().show_companies(agency=public_agency.code)
 
+            company_code = self.__index_controller.company_controller().view().get_company()
+            if company_code is not None:
+                company = next(
+                    (i for i in self.__index_controller.company_controller().get_company() if i.code == company_code),
+                    None
+                )
+                if company:
+                    commitment.company = company
+                else:
+                    self.__index_controller.get_view().show_message("❕- Empresa não encontrada.")
+                    return
+            else:
+                self.__index_controller.get_view().show_message("❕- Código de empresa inválido.")
+                return
+
+            self.__index_controller.get_view().show_message("✨ - Compromisso atualizado com sucesso.")
+        else:
+            self.__index_controller.get_view().show_message("❕- Nenhum compromisso encontrado.")
+
+    
     
     # Excluir um compromisso;
     def delete_commitment(self):
@@ -119,14 +151,17 @@ class CommitmentController:
         if index is not None:
             commitment = next((i for i in self.__commitments if i.code == index), None)
             if commitment is None:
-                self.__index_controller.get_view().show_message("Compromisso não encontrado.")
+                self.__index_controller.get_view().show_message("❕- Compromisso não encontrado.")
                 return
             
             self.__commitments.remove(commitment)
-            self.__index_controller.get_view().show_message("Compromisso excluído com sucesso.")
+            self.__index_controller.get_view().show_message("✨ - Compromisso excluído com sucesso.")
         else:
-            self.__index_controller.get_view().show_message("Nenhum compromisso encontrado.")
+            self.__index_controller.get_view().show_message("❕- Nenhum compromisso encontrado.")
 
+
+    def view(self):
+        return self.__commitments_view
 
     # Voltar;
     def back(self):

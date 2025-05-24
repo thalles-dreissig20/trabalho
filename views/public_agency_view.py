@@ -6,7 +6,7 @@ class PublicAgencyView:
         while True:
             try:
                 print("\n===== MENU DA AGENCIA =====")
-                print("1. Sobre")
+                print("1. Sobre a agencia")
                 print("2. Listar companias")
                 print("3. Listar notas fiscais")
                 print("4. Relatorio")
@@ -24,13 +24,13 @@ class PublicAgencyView:
 
 
 
-    def show_public_agency(self, public_agency):
+    def show_public_agency(self, agency_data: dict):
+        print('\n\n')
         print(
             f"╔════════════════════════════════════════════════════╗\n"
-            f"║ Nome:          {public_agency.social_reason}\n"
-            f"║ CNPJ:          {public_agency.cnpj}\n"
-            f"║ Capital:       R$ {public_agency.amount:,.2f}\n"
-            f"║ Email:         {public_agency.email or 'N/A'}\n"
-            f"║ Telefone:      {public_agency.phone or 'N/A'}\n"
+            f"║ Nome:          {agency_data['Nome']}\n"
+            f"║ CNPJ:          {agency_data['CNPJ']}\n"
+            f"║ Email:         {agency_data['Email']}\n"
+            f"║ Telefone:      {agency_data['Telefone']}\n"
             f"╚════════════════════════════════════════════════════╝\n"
         )

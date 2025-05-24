@@ -38,15 +38,24 @@ class PublicAgencyController:
     
     # Dados;
     def about(self):
-        return self.__public_agency_view.show_public_agency(self.__public_agency)
+        values = {
+            "Nome": self.__public_agency.social_reason,
+            "CNPJ": self.__public_agency.cnpj,
+            "Capital": f"R$ {self.__public_agency.amount:,.2f}",
+            "Email": self.__public_agency.email or "N/A",
+            "Telefone": self.__public_agency.phone or "N/A"
+        }
+        return self.__public_agency_view.show_public_agency(values)
     
     # Listar companias;
     def list_companies(self):
-        return self.__index_controller.company_controller().show_companies(agency=self.__public_agency.code)
+        agencyCode = self.__public_agency.code
+        return self.__index_controller.company_controller().show_companies(agency=agencyCode)
     
     # Listar notas;
     def list_invoices(self):
-        return self.__index_controller.invoices_controller().show_invoices(self.__public_agency.code)
+        agencyCode = self.__public_agency.code
+        return self.__index_controller.invoices_controller().show_invoices(agency=agencyCode)
     
     # Relatório;
     def report(self):

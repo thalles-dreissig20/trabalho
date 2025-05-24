@@ -1,9 +1,10 @@
 from models.company import Company
 from models.public_agency import PublicAgency
+from models.commitment import Commitment
 
 class Invoice:
     _code = 1
-    def __init__(self, type: str, date: str, total_price: float, company: Company, public_agency: PublicAgency, retentions: list):
+    def __init__(self, type: str, date: str, total_price: float, company: Company, public_agency: PublicAgency, retentions: list, commitment: Commitment):
         self.__code = Invoice._code
         Invoice._code += 1  
         self.__type = type
@@ -13,6 +14,7 @@ class Invoice:
         self.__public_agency = public_agency
         self.__approved = False
         self.__retentions = retentions
+        self.__commitment = commitment
 
     @property
     def code(self):
@@ -46,6 +48,10 @@ class Invoice:
     def retentions(self):
         return self.__retentions
 
+    @property
+    def commitment(self):
+        return self.__commitment
+    
     @type.setter
     def type(self, type):
         self.__type = type
@@ -73,3 +79,7 @@ class Invoice:
     @retentions.setter
     def retentions(self, tax):
         self.__retentions.append(tax)
+
+    @commitment.setter
+    def commitment(self, commitment):
+        self.__commitment = commitment
