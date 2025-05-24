@@ -2,7 +2,9 @@
 from exceptions.index import MenuOptionError
 from tabulate import tabulate
 
-class CompanyView: 
+from views.AbstractCodeView import AbstractCodeView
+
+class CompanyView(AbstractCodeView): 
     def main_menu(self):
         while True:
             try:
@@ -29,12 +31,6 @@ class CompanyView:
         nome = input("Digite a razão social: ")
         return cnpj, nome
 
-    def get_company(self):
-        try:
-            return int(input("Código da empresa: "))
-        except ValueError:
-            print("Entrada inválida. Digite um número válido.")
-            return None
 
     def show_companies(self, companies):
         if not companies:

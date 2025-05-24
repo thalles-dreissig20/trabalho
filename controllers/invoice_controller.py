@@ -109,7 +109,7 @@ class InvoiceController:
             return
 
         self.__index_controller.commitment_controller().show_commitments()
-        commitment_code = self.__index_controller.commitment_controller().view().get_commitment()
+        commitment_code = self.__index_controller.commitment_controller().view().get_code(message="Código do compromisso: ")
         if commitment_code is None:
             return
         
@@ -119,7 +119,7 @@ class InvoiceController:
         self.__index_controller.company_controller().show_companies()
 
         while True:
-            company_code = self.__index_controller.company_controller().view().get_company()
+            company_code = self.__index_controller.company_controller().view().get_code(message="Código da empresa: ")
             if company_code != commitment.company.code:
                 self.__index_controller.get_view().show_message("❕- A empresa informada não corresponde ao compromisso selecionado. Tente novamente.")
                 continue
@@ -142,7 +142,7 @@ class InvoiceController:
         if tax.upper() == "S":
             while True:
                 self.__index_controller.retention_controller().show_retentions()
-                retention_code = self.__index_controller.retention_controller().view().get_retention()
+                retention_code = self.__index_controller.retention_controller().view().get_code(message="Codigo da retenção: ")
 
                 retention = self.__index_controller.retention_controller().get_retention(retention=retention_code)
                 retentions.append(retention)
@@ -166,7 +166,7 @@ class InvoiceController:
     # Atualizar uma invoice;
     def update_invoice(self):
         self.show_invoices()
-        invoice_code = self.__invoice_view.get_invoice()
+        invoice_code = self.__invoice_view.get_code(message="Código da nota: ")
         invoice = next((i for i in self.__invoices if i.code == invoice_code), None)
 
         if invoice is None:
@@ -197,7 +197,7 @@ class InvoiceController:
         self.__invoice_view.show_invoices(pending_invoices)
 
         try:
-            invoice_code = self.__invoice_view.get_invoice()
+            invoice_code = self.__invoice_view.get_code(message="Código da nota: ")
             invoice_to_approve = next((i for i in pending_invoices if i.code == invoice_code), None)
             if invoice_to_approve is None:
                 self.__index_controller.get_view().show_message("❕- Nota não encontrada.")
@@ -207,8 +207,14 @@ class InvoiceController:
             self.__index_controller.get_view().show_message("❕- Nota inválida.")
             return
 
+        if invoice_to_approve.commitment.paid == True:
+            self.__index_controller.get_view().show_message("❕- Não é possível aprovar uma nota vinculada a um compromisso já pago.")
+            return
+        
         invoice_to_approve.approved = True
         invoice_to_approve.commitment.amount -= invoice_to_approve.total_price
+        if invoice_to_approve.commitment.amount <= 0:
+            invoice_to_approve.commitment.paid = True
 
         self.__index_controller.get_view().show_message(f"✨ - Nota {invoice_to_approve.code} aprovada com sucesso.")
 
@@ -221,7 +227,7 @@ class InvoiceController:
             self.__index_controller.get_view().show_message("❕- Nenhuma nota cadastrada.")
             return
 
-        invoice_code = self.__invoice_view.get_invoice()
+        invoice_code = self.__invoice_view.get_code(message="Código da nota: ")
         invoice = next((i for i in self.__invoices if i.code == invoice_code), None)
 
         if invoice is None:

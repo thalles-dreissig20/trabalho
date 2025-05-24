@@ -2,8 +2,8 @@
 from helpers.index import Validator
 from tabulate import tabulate
 from datetime import datetime
-
-class CommitmentView:
+from views.AbstractCodeView import AbstractCodeView
+class CommitmentView(AbstractCodeView):
     def main_menu(self):
         print("\n===== MENU COMPROMISSO =====")
         print("1. Cadastrar compromisso")
@@ -33,13 +33,6 @@ class CommitmentView:
 
         return description, date, amount
 
-    
-    def get_commitment(self):
-        try:
-            return int(input("Código do compromisso: "))
-        except ValueError:
-            print("Entrada inválida. Digite um número válido.")
-            return None
 
     def show_commitments(self, commitments):
         if not commitments:
@@ -47,7 +40,7 @@ class CommitmentView:
             return
         print('\n\n')
         headers = [
-            "Código", "Descrição", "Data", "Valor",
+            "Código", "Descrição", "Data", "Valor", "Pago",
             "Empresa", "CNPJ", "Agência Pública"
         ]
 
@@ -66,6 +59,7 @@ class CommitmentView:
                 commitment.description,
                 date_obj.strftime('%d/%m/%Y') if hasattr(date_obj, "strftime") else str(date_obj),
                 f"R$ {commitment.amount:,.2f}",
+                commitment.paid,
                 commitment.company.social_reason,
                 commitment.company.cnpj,
                 commitment.public_agency.social_reason,

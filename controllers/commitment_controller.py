@@ -13,7 +13,7 @@ class CommitmentController:
 
 
         # TODO: Temporary data;
-        c1 = Commitment("Compra de materiais", "01-10-2025", 100000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=1))
+        c1 = Commitment("Compra de materiais", "01-10-2025", 10000, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=1))
         c2 = Commitment("Pagamento de serviços", "02-10-2025", 200000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=2))
         c3 = Commitment("Compra de equipamentos", "03-11-2025", 150000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=3))
         c4 = Commitment("Pagamento de fornecedores", "04-11-2025", 500000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=4))
@@ -88,7 +88,7 @@ class CommitmentController:
 
         # Get company;
         self.__index_controller.company_controller().show_companies(agency=public_agency.code)
-        company_code = self.__index_controller.company_controller().view().get_company()
+        company_code = self.__index_controller.company_controller().view().get_code(message="Código da empresa: ")
         if company_code is None:
             self.__index_controller.get_view().show_message("❕- Nenhuma empresa encontrada.")
             return
@@ -105,7 +105,7 @@ class CommitmentController:
     # Atualizar um compromisso;
     def update_commitment(self):
         self.show_commitments()
-        index = self.__commitments_view.get_commitment()
+        index = self.__commitments_view.get_code(message="Código do compromisso: ")
 
         if index is not None:
             commitment = next((i for i in self.__commitments if i.code == index), None)
@@ -123,7 +123,7 @@ class CommitmentController:
             public_agency = commitment.public_agency
             self.__index_controller.company_controller().show_companies(agency=public_agency.code)
 
-            company_code = self.__index_controller.company_controller().view().get_company()
+            company_code = self.__index_controller.company_controller().view().get_code(message="Código da empresa: ")
             if company_code is not None:
                 company = next(
                     (i for i in self.__index_controller.company_controller().get_company() if i.code == company_code),
@@ -147,7 +147,7 @@ class CommitmentController:
     # Excluir um compromisso;
     def delete_commitment(self):
         self.show_commitments()
-        index = self.__commitments_view.get_commitment()
+        index = self.__commitments_view.get_code(message="Código do compromisso: ")
         if index is not None:
             commitment = next((i for i in self.__commitments if i.code == index), None)
             if commitment is None:

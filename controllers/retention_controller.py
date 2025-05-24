@@ -69,7 +69,7 @@ class RetentionController:
     # Update Retention;
     def update_retentions(self):
         self.show_retentions()
-        code = self.__retention_view.get_retention()
+        code = self.__retention_view.get_code(message="Codigo da retenção: ")
         if code is None:
             self.__index_controller.get_view().show_message("❕- Retenção não encontrada.")
             return

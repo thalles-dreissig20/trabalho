@@ -49,9 +49,9 @@ class ReportView:
         ret_values.append(f"R$ {total_impostos_nota:,.2f}")
         return ret_values, total_impostos_nota
 
+
+    #############################################################################
     def general_report(self, public_agency, retentions): 
-        total_companies = len(public_agency.companies)
-        total_invoices = len(public_agency.invoices)
         total_faturamento = sum(invoice.total_price for invoice in public_agency.invoices)
 
         retention_totals = defaultdict(float)
@@ -59,7 +59,7 @@ class ReportView:
 
         print('\n\n')
         print("           COMPANHIAS CADASTRADAS      ")
-        if total_companies:
+        if public_agency.companies:
             companies_table = []
             for idx, company in enumerate(public_agency.companies, start=1):
                 companies_table.append([idx, company.social_reason, company.cnpj])
@@ -70,7 +70,7 @@ class ReportView:
 
         print('\n\n')
         print("           NOTAS FISCAIS CADASTRADAS      ")
-        if total_invoices:
+        if public_agency.invoices:
             invoice_table = []
             for invoice in public_agency.invoices:
                 codigo = invoice.code
@@ -88,13 +88,15 @@ class ReportView:
             retention_total_cells = [f"R$ {retention_totals[r.name]:,.2f}" for r in retentions]
             retention_total_cells.append(f"R$ {total_all_retencoes:,.2f}")
 
-            invoice_table.append([f"{total_invoices} Notas", "", "TOTAL", "", f"R$ {total_faturamento:,.2f}", ""] + retention_total_cells)
+            invoice_table.append([f"{len(public_agency.invoices)} Notas", "", "TOTAL", "", f"R$ {total_faturamento:,.2f}", ""] + retention_total_cells)
 
             headers = ["Código", "Tipo", "Descrição de Compromisso", "Empresa", "Valor", "Aprovada"] + [r.name for r in retentions] + ["Total de Impostos"]
             print(tabulate(invoice_table, headers=headers, tablefmt="fancy_grid", stralign="center", numalign="right"))
         else:
             print("Nenhuma nota fiscal cadastrada.\n")
 
+
+    #############################################################################
     def per_commitment_report(self, commitment, invoices, retentions):
         print('\n\n')
         print("           RELATÓRIO DE NOTAS POR COMPROMISSO       ")
@@ -122,6 +124,8 @@ class ReportView:
         headers = ["Código Compromisso", "Descrição", "Tipo", "Valor da Nota Fiscal", "Aprovada"] + [r.name for r in retentions] + ["Total de Impostos"]
         print(tabulate(table_data, headers=headers, tablefmt="fancy_grid", stralign="left"))
 
+
+    #############################################################################
     def per_date_report(self, invoices, retentions):
         while True:
             data_str_from = input("Data inicial (DD-MM-YYYY): ")

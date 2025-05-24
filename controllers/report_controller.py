@@ -31,7 +31,7 @@ class ReportController:
 
     def per_commitment_report(self):
         self.__index_controller.commitment_controller().show_commitments()
-        commitment_code = self.__index_controller.commitment_controller().view().get_commitment()
+        commitment_code = self.__index_controller.commitment_controller().view().get_code(message="Código do compromisso: ")
         if not commitment_code:
             print("❕- Nenhum compromisso encontrado.")
             return

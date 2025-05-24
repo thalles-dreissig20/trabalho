@@ -3,8 +3,9 @@ from helpers.index import Validator
 from tabulate import tabulate
 # Exceptions;
 from exceptions.index import MenuOptionError
+from views.AbstractCodeView import AbstractCodeView
 
-class InvoiceView:    
+class InvoiceView(AbstractCodeView):    
     def main_menu(self):
         while True:
             try:
@@ -40,7 +41,7 @@ class InvoiceView:
             try:
                 valor_total = float(input("Valor total: "))
                 if valor_total > total_price:
-                    print("Valor total não pode ser maior que o valor do compromisso.")
+                    print(f"Valor total não pode ser maior que o valor do compromisso. R${total_price}")
                     continue
                 break
             except ValueError:
@@ -80,13 +81,6 @@ class InvoiceView:
                 case _:
                     print("Opção inválida.")
 
-
-    def get_invoice(self):
-        try:
-            return int(input("Código da nota: "))
-        except ValueError:
-            print("Entrada inválida. Digite um número válido.")
-            return None
 
 
     def show_invoices(self, invoices):

@@ -1,8 +1,8 @@
 # Exceptions;
 from exceptions.index import MenuOptionError
 from tabulate import tabulate
-
-class RetentionView:
+from views.AbstractCodeView import AbstractCodeView
+class RetentionView(AbstractCodeView):
     def main_menu(self):
         while True:
             try:
@@ -20,14 +20,6 @@ class RetentionView:
                 print("Entrada inválida. Por favor, digite um número.")
             except MenuOptionError as e:
                 print(e)
-    
-
-    def get_retention(self): 
-        try:
-            return int(input("Digite o código da retenção: "))
-        except ValueError:
-            print("Entrada inválida. Digite um número válido.")
-            return None
     
     
     def form(self):

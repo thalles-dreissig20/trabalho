@@ -103,7 +103,7 @@ class CompanyController:
             return
         
         # Get company;
-        code = self.__company_view.get_company()
+        code = self.__company_view.get_code(message="Código da empresa: ")
         company = next((c for c in self.__companies if c.code == code), None)
         if company is None:
             self.__index_controller.get_view().show_message("❕- Empresa não encontrada.")
@@ -125,7 +125,7 @@ class CompanyController:
             return
         
         # Get company;
-        code = self.__company_view.get_company()
+        code = self.__company_view.get_code(message="Código da empresa: ")
         company = next((c for c in self.__companies if c.code == code), None)
         if company is None:
             self.__index_controller.get_view().show_message("❕- Empresa não encontrada.")
