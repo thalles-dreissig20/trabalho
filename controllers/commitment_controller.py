@@ -13,13 +13,13 @@ class CommitmentController:
 
 
         # TODO: Temporary data;
-        c1 = Commitment("Compra de materiais", "01-10-2025", 10000, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=1))
-        c2 = Commitment("Pagamento de serviços", "02-10-2025", 200000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=2))
-        c3 = Commitment("Compra de equipamentos", "03-11-2025", 150000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=3))
-        c4 = Commitment("Pagamento de fornecedores", "04-11-2025", 500000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=4))
-        for commitment in [c1, c2, c3, c4]:
-            self.__commitments.append(commitment)
-            self.__index_controller.agency_controller().get_public_agency().commitments = commitment
+        #c1 = Commitment("Compra de materiais", "01-10-2025", 10000, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=1))
+        #c2 = Commitment("Pagamento de serviços", "02-10-2025", 200000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=2))
+        #c3 = Commitment("Compra de equipamentos", "03-11-2025", 150000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=3))
+        #c4 = Commitment("Pagamento de fornecedores", "04-11-2025", 500000.00, self.__index_controller.agency_controller().get_public_agency(), self.__index_controller.company_controller().get_company(company=4))
+        #for commitment in [c1, c2, c3, c4]:
+        #    self.__commitments.append(commitment)
+        #    self.__index_controller.agency_controller().get_public_agency().commitments = commitment
 
 
 

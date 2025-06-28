@@ -13,14 +13,14 @@ class InvoiceController:
         self.__invoice_view = InvoiceView()
 
         # TODO: Temporary data;
-        i1 = Invoice("NF", datetime.strptime("21-10-2025", "%d-%m-%Y").date(), 1000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(2), self.__index_controller.retention_controller().get_retention(1)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
-        i2 = Invoice("NF", datetime.strptime("22-10-2025", "%d-%m-%Y").date(), 2000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(5)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
-        i3 = Invoice("Fatura", datetime.strptime("23-11-2025", "%d-%m-%Y").date(), 3000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(1)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
-        i4 = Invoice("Fatura", datetime.strptime("24-11-2025", "%d-%m-%Y").date(), 4000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(6)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
-        for i in [i1, i2, i3, i4]:
-            self.__invoices.append(i)
-            self.__index_controller.agency_controller().get_public_agency().invoices.append(i)
-            self.__index_controller.company_controller().get_company(1, 1).invoices.append(i)
+        #i1 = Invoice("NF", datetime.strptime("21-10-2025", "%d-%m-%Y").date(), 1000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(2), self.__index_controller.retention_controller().get_retention(1)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
+        #i2 = Invoice("NF", datetime.strptime("22-10-2025", "%d-%m-%Y").date(), 2000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(5)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
+        #i3 = Invoice("Fatura", datetime.strptime("23-11-2025", "%d-%m-%Y").date(), 3000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(1)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
+        #i4 = Invoice("Fatura", datetime.strptime("24-11-2025", "%d-%m-%Y").date(), 4000, self.__index_controller.company_controller().get_company(agency=1, company=1), self.__index_controller.agency_controller().get_public_agency(), [self.__index_controller.retention_controller().get_retention(6)], self.__index_controller.commitment_controller().get_commitment(commitment=1))
+        #for i in [i1, i2, i3, i4]:
+        #    self.__invoices.append(i)
+        #    self.__index_controller.agency_controller().get_public_agency().invoices.append(i)
+        #    self.__index_controller.company_controller().get_company(1, 1).invoices.append(i)
 
 
     ################################################################################
@@ -104,9 +104,16 @@ class InvoiceController:
         # Pegar agencia;
         public_agency = self.__index_controller.agency_controller().get_public_agency()
 
-        if not public_agency.companies:
+        companies = [
+            c for c in self.__index_controller.company_controller().get_company(agency=public_agency.code)
+        ]
+        if not companies:
             self.__index_controller.get_view().show_message("❕- Nenhuma empresa cadastrada. Cadastre uma empresa antes.")
             return
+        
+        #if not public_agency.companies:
+        #    self.__index_controller.get_view().show_message("❕- Nenhuma empresa cadastrada. Cadastre uma empresa antes.")
+        #    return
 
         self.__index_controller.commitment_controller().show_commitments()
         commitment_code = self.__index_controller.commitment_controller().view().get_code(message="Código do compromisso: ")

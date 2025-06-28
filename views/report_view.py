@@ -6,6 +6,8 @@ from collections import defaultdict
 # Exception;
 from exceptions.index import MenuOptionError
 
+from dearpygui import dearpygui as dpg
+
 class ReportView:
     #############################################################################
     # Menu;
@@ -31,6 +33,145 @@ class ReportView:
     #############################################################################
     # Methods;
 
+
+    def general_report_gui(self, public_agency, retentions):
+        retention_totals = defaultdict(float)
+        total_all_retencoes = 0.0
+
+        dpg.create_context()
+
+        with dpg.window(label="Relatório Geral", width=900, height=600):
+            dpg.add_text("Companhias Cadastradas")
+            if public_agency.companies:
+                companies_data = [
+                    [idx + 1, c.social_reason, c.cnpj]
+                    for idx, c in enumerate(public_agency.companies)
+                ]
+                with dpg.table(header_row=True, resizable=True, policy=dpg.mvTable_SizingStretchProp, row_background=True):
+                    dpg.add_table_column(label="#")
+                    dpg.add_table_column(label="Razão Social")
+                    dpg.add_table_column(label="CNPJ")
+
+                    for row in companies_data:
+                        with dpg.table_row():
+                            for cell in row:
+                                dpg.add_text(cell)
+            else:
+                dpg.add_text("Nenhuma companhia cadastrada.")
+
+            dpg.add_spacing(count=2)
+            dpg.add_text("Notas Fiscais Cadastradas")
+
+            if public_agency.invoices:
+                invoices_data = []
+                for invoice in public_agency.invoices:
+                    codigo = invoice.code
+                    tipo = invoice.type
+                    desc = invoice.commitment.description[:50]
+                    company = invoice.company.social_reason
+                    valor = f"R$ {invoice.total_price:,.2f}"
+                    aprovada = "Sim" if invoice.approved else "Não"
+
+                    ret_map = {r.name: r for r in invoice.retentions}
+                    ret_values = []
+                    total_impostos_nota = 0.0
+                    for r in retentions:
+                        if r.name in ret_map:
+                            reten = ret_map[r.name]
+                            reten_valor = invoice.total_price * (reten.rate / 100)
+                            retention_totals[r.name] += reten_valor
+                            total_impostos_nota += reten_valor
+                            ret_values.append(f"{reten.rate}%")
+                        else:
+                            ret_values.append("-")
+
+                    ret_values.append(f"R$ {total_impostos_nota:,.2f}")
+                    total_all_retencoes += total_impostos_nota
+
+                    invoices_data.append([
+                        codigo, tipo, desc, company, valor, aprovada
+                    ] + ret_values)
+
+                headers = ["Código", "Tipo", "Descrição", "Empresa", "Valor", "Aprovada"] + [r.name for r in retentions] + ["Total de Impostos"]
+
+                with dpg.table(header_row=True, resizable=True, policy=dpg.mvTable_SizingStretchProp, row_background=True):
+                    for header in headers:
+                        dpg.add_table_column(label=header)
+
+                    for row in invoices_data:
+                        with dpg.table_row():
+                            for cell in row:
+                                dpg.add_text(cell)
+            else:
+                dpg.add_text("Nenhuma nota fiscal cadastrada.")
+
+        dpg.create_viewport(title='Relatorio', width=900, height=600)
+        dpg.setup_dearpygui()
+        dpg.show_viewport()
+        dpg.start_dearpygui()
+        dpg.destroy_context()
+
+
+    def per_commitment_report_gui(self, commitment, invoices, retentions):
+        retention_totals = defaultdict(float)
+        total_all_retencoes = 0.0
+
+        # Filtrar notas relacionadas ao compromisso
+        related_invoices = [inv for inv in invoices if inv.commitment.code == commitment.code]
+
+        # Montar dados da tabela
+        table_data = []
+
+        if related_invoices:
+            for invoice in related_invoices:
+                # Reusar seu método format_retentions para calcular os valores
+                ret_values, total_impostos_nota = self.format_retentions(invoice, retentions, retention_totals)
+                total_all_retencoes += total_impostos_nota
+                row = [
+                    commitment.code,
+                    commitment.description,
+                    invoice.type,
+                    f"R$ {invoice.total_price:,.2f}",
+                    "Sim" if invoice.approved else "Não"
+                ] + ret_values
+                table_data.append(row)
+
+            # Linha de total
+            total_line = ["", "", "TOTAL", "", ""] + [f"R$ {retention_totals[r.name]:,.2f}" for r in retentions] + [f"R$ {total_all_retencoes:,.2f}"]
+            table_data.append(total_line)
+
+        headers = ["Código Compromisso", "Descrição", "Tipo", "Valor da Nota Fiscal", "Aprovada"] + [r.name for r in retentions] + ["Total de Impostos"]
+
+        dpg.create_context()
+
+        with dpg.window(label=f"Relatório por Compromisso - {commitment.code}", width=900, height=400):
+            if table_data:
+                with dpg.table(header_row=True, resizable=True, policy=dpg.mvTable_SizingStretchProp, row_background=True):
+                    for header in headers:
+                        dpg.add_table_column(label=header)
+
+                    for row in table_data:
+                        with dpg.table_row():
+                            for cell in row:
+                                dpg.add_text(cell)
+            else:
+                dpg.add_text("Nenhuma nota fiscal relacionada a este compromisso.")
+
+        dpg.create_viewport(title="Relatorio por Compromisso", width=900, height=400)
+        dpg.setup_dearpygui()
+        dpg.show_viewport()
+        dpg.start_dearpygui()
+        dpg.destroy_context()
+
+
+
+
+
+
+
+
+
+
     def format_retentions(self, invoice, retentions, retention_totals):
         ret_map = {r.name: r for r in invoice.retentions}
         ret_values = []
@@ -48,52 +189,6 @@ class ReportView:
 
         ret_values.append(f"R$ {total_impostos_nota:,.2f}")
         return ret_values, total_impostos_nota
-
-
-    #############################################################################
-    def general_report(self, public_agency, retentions): 
-        total_faturamento = sum(invoice.total_price for invoice in public_agency.invoices)
-
-        retention_totals = defaultdict(float)
-        total_all_retencoes = 0.0
-
-        print('\n\n')
-        print("           COMPANHIAS CADASTRADAS      ")
-        if public_agency.companies:
-            companies_table = []
-            for idx, company in enumerate(public_agency.companies, start=1):
-                companies_table.append([idx, company.social_reason, company.cnpj])
-            headers = ["#", "Razão Social", "CNPJ"]
-            print(tabulate(companies_table, headers=headers, tablefmt="fancy_grid", stralign="left"))
-        else:
-            print("Nenhuma companhia cadastrada.\n")
-
-        print('\n\n')
-        print("           NOTAS FISCAIS CADASTRADAS      ")
-        if public_agency.invoices:
-            invoice_table = []
-            for invoice in public_agency.invoices:
-                codigo = invoice.code
-                tipo = invoice.type
-                desc = invoice.commitment.description[:50]
-                company = invoice.company.social_reason
-                valor = f"R$ {invoice.total_price:,.2f}"
-                aprovada = "Sim" if invoice.approved else "Não"
-
-                ret_values, total_impostos_nota = self.format_retentions(invoice, retentions, retention_totals)
-                total_all_retencoes += total_impostos_nota
-
-                invoice_table.append([codigo, tipo, desc, company, valor, aprovada] + ret_values)
-
-            retention_total_cells = [f"R$ {retention_totals[r.name]:,.2f}" for r in retentions]
-            retention_total_cells.append(f"R$ {total_all_retencoes:,.2f}")
-
-            invoice_table.append([f"{len(public_agency.invoices)} Notas", "", "TOTAL", "", f"R$ {total_faturamento:,.2f}", ""] + retention_total_cells)
-
-            headers = ["Código", "Tipo", "Descrição de Compromisso", "Empresa", "Valor", "Aprovada"] + [r.name for r in retentions] + ["Total de Impostos"]
-            print(tabulate(invoice_table, headers=headers, tablefmt="fancy_grid", stralign="center", numalign="right"))
-        else:
-            print("Nenhuma nota fiscal cadastrada.\n")
 
 
     #############################################################################
