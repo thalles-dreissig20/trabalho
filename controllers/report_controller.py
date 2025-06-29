@@ -26,7 +26,8 @@ class ReportController:
     def general_report(self):
         agency = self.__index_controller.agency_controller().get_public_agency()
         retentions = self.__index_controller.retention_controller().get_retention()
-        return self.__report_view.general_report_gui(agency, retentions)
+        companies = self.__index_controller.company_controller().get_company(agency=agency.code)
+        return self.__report_view.general_report_gui(agency, retentions, companies)
     
 
     def per_commitment_report(self):

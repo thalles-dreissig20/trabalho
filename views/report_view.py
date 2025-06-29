@@ -34,7 +34,7 @@ class ReportView:
     # Methods;
 
 
-    def general_report_gui(self, public_agency, retentions):
+    def general_report_gui(self, public_agency, retentions, companies):
         retention_totals = defaultdict(float)
         total_all_retencoes = 0.0
 
@@ -42,10 +42,10 @@ class ReportView:
 
         with dpg.window(label="Relatório Geral", width=900, height=600):
             dpg.add_text("Companhias Cadastradas")
-            if public_agency.companies:
+            if companies:
                 companies_data = [
                     [idx + 1, c.social_reason, c.cnpj]
-                    for idx, c in enumerate(public_agency.companies)
+                    for idx, c in enumerate(companies)
                 ]
                 with dpg.table(header_row=True, resizable=True, policy=dpg.mvTable_SizingStretchProp, row_background=True):
                     dpg.add_table_column(label="#")
@@ -162,11 +162,6 @@ class ReportView:
         dpg.show_viewport()
         dpg.start_dearpygui()
         dpg.destroy_context()
-
-
-
-
-
 
 
 

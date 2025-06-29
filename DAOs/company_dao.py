@@ -1,7 +1,6 @@
 from DAOs.dao import DAO
 from models.company import Company
 
-#cada entidade terá uma classe dessa, implementação bem simples.
 class CompanyDAO(DAO):
     def __init__(self):
         super().__init__('companies.pkl')

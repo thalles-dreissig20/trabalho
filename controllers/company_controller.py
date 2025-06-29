@@ -4,23 +4,9 @@ from DAOs.company_dao import CompanyDAO
 
 class CompanyController:
     def __init__(self, index_controller):
-        self.__companies = []
         self.__index_controller = index_controller
         self.__company_DAO = CompanyDAO()
         self.__company_view = CompanyView()
-
-
-
-        # TODO: Temporary data;
-        #c1 = Company("12.345.678/0001-95", "Empresa A", self.__index_controller.agency_controller().get_public_agency())
-        #c2 = Company("98.765.432/0001-96", "Empresa B", self.__index_controller.agency_controller().get_public_agency())
-        #c3 = Company("12.345.678/0001-97", "Empresa C", self.__index_controller.agency_controller().get_public_agency())
-        #c4 = Company("12.345.678/0001-98", "Empresa D", self.__index_controller.agency_controller().get_public_agency())
-        #for company in [c1, c2, c3, c4]:
-        #    self.__companies.append(company)
-        #    self.__index_controller.agency_controller().get_public_agency().companies = company
-
-
 
     ################################################################################
     # MENU;
@@ -61,7 +47,7 @@ class CompanyController:
         
     # Obter lista de companias;
     def show_companies(self, agency: int = None, companies_codes: list[int] = None):
-        companies = list(self.__company_DAO.get_all())  # pega todas as empresas salvas
+        companies = list(self.__company_DAO.get_all())
 
         if not companies:
             self.__index_controller.get_view().show_message("❕- Não há empresas cadastradas.")
